@@ -1,0 +1,28 @@
+package com.uniandes.cspsolver
+
+rule "Show Variables"
+	salience 1000
+	when
+		v: Variable()
+	then
+		System.out.println(v);
+end
+
+
+rule "Show Clues"
+	salience 1000
+	when
+		c: Clue()
+	then
+		System.out.println(c);
+end
+
+rule "DirectAssignment"
+	salience 500
+	when
+		c: Clue(relationship == "=", $v1: prefix, suffix matches "\\d+")
+		v: Variable(name==$v1, value != c.suffix)		
+	then
+		System.out.println("Saque:" + v);
+		retract(v);
+end
