@@ -11,7 +11,7 @@ package com.uniandes.cspsolver;
  */
 public class InputClueDialog extends javax.swing.JFrame {
     
-    private Clue clue;
+    private SingleClue clue;
     private final InputCSPJFrame cspMainFrame;
 
     /**
@@ -23,7 +23,7 @@ public class InputClueDialog extends javax.swing.JFrame {
         
     }
     
-    public Clue getClue() {
+    public SingleClue getClue() {
         return clue;
     }
     
@@ -37,28 +37,28 @@ public class InputClueDialog extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        prefixCB = new javax.swing.JComboBox();
+        dstVarCB = new javax.swing.JComboBox();
         relationshipCB = new javax.swing.JComboBox();
-        suffixTF = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        valueTF = new javax.swing.JTextField();
+        addBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        prefixCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4" }));
-        prefixCB.setName("prefix"); // NOI18N
+        dstVarCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "C1", "C2", "C3", "C4" }));
+        dstVarCB.setName("prefix"); // NOI18N
 
         relationshipCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "=", ">=", "<=", ">", "<" }));
 
-        suffixTF.addActionListener(new java.awt.event.ActionListener() {
+        valueTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 suffixTFActionPerformed(evt);
             }
         });
 
-        jButton1.setText("ADD");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addBtn.setText("ADD");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addBtnActionPerformed(evt);
             }
         });
 
@@ -68,15 +68,15 @@ public class InputClueDialog extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(prefixCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(dstVarCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(relationshipCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(suffixTF, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(valueTF, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(addBtn)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -84,11 +84,11 @@ public class InputClueDialog extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(prefixCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dstVarCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(relationshipCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(suffixTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(valueTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(addBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -99,13 +99,13 @@ public class InputClueDialog extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_suffixTFActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if(!suffixTF.getText().equals("")){
-            Clue clue= new Clue();
-            clue.setPrefix(prefixCB.getSelectedItem().toString());
+        if(!valueTF.getText().equals("")){
+            SingleClue clue= new SingleClue();
+            clue.setDstVar(dstVarCB.getSelectedItem().toString());
             clue.setRelationship(relationshipCB.getSelectedItem().toString());
-            clue.setSuffix(suffixTF.getText());
+            clue.setValue(valueTF.getText());
             
             cspMainFrame.addClue(clue);
             cspMainFrame.updateCluesList();
@@ -116,9 +116,9 @@ public class InputClueDialog extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox prefixCB;
+    private javax.swing.JButton addBtn;
+    private javax.swing.JComboBox dstVarCB;
     private javax.swing.JComboBox relationshipCB;
-    private javax.swing.JTextField suffixTF;
+    private javax.swing.JTextField valueTF;
     // End of variables declaration//GEN-END:variables
 }

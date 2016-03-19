@@ -31,16 +31,16 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         updateCluesList();
     }
     
-    public void addClue(Clue c){
+    public void addClue(SingleClue c){
         solver.addClue(c);
     }
     
     public void updateCluesList(){
         DefaultListModel<String> model= new DefaultListModel<String>();
-        List<Clue> clues = solver.getClues();
+        List<SingleClue> clues = solver.getClues();
         for (int i = 0; i < clues.size(); i++) {
-            Clue c = clues.get(i);
-            model.addElement(c.getPrefix()+c.getRelationship()+c.getSuffix());
+            SingleClue c = clues.get(i);
+            model.addElement(c.toString());
         }
         cluesJList.setModel(model);
     }

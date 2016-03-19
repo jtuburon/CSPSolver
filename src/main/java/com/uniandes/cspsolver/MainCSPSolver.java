@@ -14,7 +14,7 @@ import org.kie.api.runtime.KieSession;
 public class MainCSPSolver 
 {
 	private List<Variable> variables;
-	private List<Clue> clues;
+	private List<SingleClue> clues;
 	
 	private KieSession kSession;
 	
@@ -23,15 +23,15 @@ public class MainCSPSolver
 		KieContainer kContainer = ks.getKieClasspathContainer();
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
-		clues = new ArrayList<Clue>();
-		Clue c= new Clue();
-		c.setPrefix("A1");
+		clues = new ArrayList<SingleClue>();
+		SingleClue c= new SingleClue();
+		c.setDstVar("A1");
 		c.setRelationship("=");
-		c.setSuffix("2");
+		c.setValue("2");
 		clues.add(c); 
 	}
 	
-	public List<Clue> getClues() {
+	public List<SingleClue> getClues() {
 		return clues;
 	}
 	
@@ -49,7 +49,7 @@ public class MainCSPSolver
 		}
 	}
 
-	public void addClue(Clue c) {
+	public void addClue(SingleClue c) {
 		clues.add(c);
 	}
 	
@@ -63,7 +63,7 @@ public class MainCSPSolver
 			kSession.insert(v);
 		}
 		for (Iterator iterator = clues.iterator(); iterator.hasNext();) {
-			Clue clue = (Clue) iterator.next();
+			SingleClue clue = (SingleClue) iterator.next();
 			kSession.insert(clue);
 		}
 	}

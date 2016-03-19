@@ -12,7 +12,7 @@ end
 rule "Show Clues"
 	salience 1000
 	when
-		c: Clue()
+		c: SingleClue()
 	then
 		System.out.println(c);
 end
@@ -20,8 +20,8 @@ end
 rule "DirectAssignment"
 	salience 500
 	when
-		c: Clue(relationship == "=", $v1: prefix, suffix matches "\\d+")
-		v: Variable(name==$v1, value != c.suffix)		
+		c: SingleClue(relationship == "=", $v1: dstVar, value matches "\\d+")
+		v: Variable(name==$v1, value != c.value)		
 	then
 		System.out.println("Saque:" + v);
 		retract(v);
