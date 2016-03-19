@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.GroupLayout;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -57,12 +60,6 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         d1TF = new javax.swing.JTextField();
         d1TF.setText("1,2,3,4");
-        jLabel2 = new javax.swing.JLabel();
-        d2TF = new javax.swing.JTextField();
-        d2TF.setText("1,2,3,4");
-        jLabel3 = new javax.swing.JLabel();
-        d3TF = new javax.swing.JTextField();
-        d3TF.setText("1,2,3,4");
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cluesJList = new javax.swing.JList();
@@ -80,48 +77,26 @@ public class InputCSPJFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("D2");
-
-        jLabel3.setText("D3");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d1TF))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d2TF, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d3TF, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)))
-                .addContainerGap())
+        	jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel1Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jLabel1)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(d1TF, 361, 361, 361)
+        			.addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(d1TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(d2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(d3TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(146, Short.MAX_VALUE))
+        	jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel1Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(jLabel1)
+        				.addComponent(d1TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addContainerGap(230, Short.MAX_VALUE))
         );
+        jPanel1.setLayout(jPanel1Layout);
 
         jTabbedPane1.addTab("Variables Domains", jPanel1);
 
@@ -212,23 +187,12 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     }
     
     private void initVariables(){
-    	for(char i='A'; i<='C'; i++){
+    	for(char i='A'; i<='B'; i++){
     		for(int j=1; j<=4; j++){
     			String varName= ""+i+j;
     			String domainAsString="";
-    			switch(i){
-    				case 'A':
-    					domainAsString=d1TF.getText();
-    				break;
-    				
-    				case 'B':
-    					domainAsString=d2TF.getText();
-    				break;
-        				
-    				case 'C':
-    					domainAsString=d3TF.getText();
-    				break;
-    			}
+    			domainAsString=d1TF.getText();
+    			
     			String values[]= domainAsString.split(",");
     			for (int k = 0; k < values.length; k++) {
 					int value = Integer.parseInt(values[k]);
@@ -287,15 +251,11 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField d1TF;
-    private javax.swing.JTextField d2TF;
-    private javax.swing.JTextField d3TF;
     // End of variables declaration//GEN-END:variables
 }
