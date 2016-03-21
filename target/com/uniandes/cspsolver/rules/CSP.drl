@@ -40,3 +40,13 @@ rule "DirectAssignmentPropagation"
 		System.out.println("Removed:" + $var);
 		retract($var);
 end
+
+
+rule "Process TwoVarsClues"
+	salience 1000
+	when
+		c: TwoVarsRelationshipClue()
+	then
+		System.out.println("TVRC==>>");
+		System.out.println(c);
+end

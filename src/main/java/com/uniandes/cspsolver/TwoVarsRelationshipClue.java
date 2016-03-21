@@ -24,4 +24,9 @@ public class TwoVarsRelationshipClue extends SingleClue {
 	public void setOperator(String operator) {
 		this.operator = operator;
 	}
+	
+	@Override
+	public String toString() {
+		return getDstVar() + getRelationship() + getSrcVar()+ getOperator()+ getValue();
+	}
 }

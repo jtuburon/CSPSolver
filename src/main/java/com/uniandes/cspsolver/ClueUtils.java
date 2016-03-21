@@ -18,6 +18,23 @@ public class ClueUtils {
 				c.setRelationship(m.group("relation"));
 				c.setValue(m.group("value"));
 			}
+		}else{
+			if(clueAsString.matches(Clue.TWO_VARS_RELATIONSHIP_PATTERN)){
+				Pattern p = Pattern.compile(Clue.TWO_VARS_RELATIONSHIP_PATTERN);
+				System.out.println(p.toString());
+				Matcher m= p.matcher(clueAsString);
+				if(m.find()){
+					TwoVarsRelationshipClue clue = new TwoVarsRelationshipClue();
+					clue.setDstVar(m.group("variable"));
+					clue.setRelationship(m.group("relation"));
+					clue.setSrcVar(m.group("srcvariable"));
+					clue.setOperator(m.group("operator"));
+					clue.setValue(m.group("value"));
+					c=clue;
+					System.out.println(clue);
+				}
+			}
+			
 		}
 		return c;
 	}
