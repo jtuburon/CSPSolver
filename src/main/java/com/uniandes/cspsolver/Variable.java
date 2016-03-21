@@ -3,6 +3,7 @@ package com.uniandes.cspsolver;
 import java.util.List;
 
 public class Variable {
+	private String group;
 	private String name;
 	private int value;
 	//private List<Integer> domain;
@@ -50,6 +51,15 @@ public class Variable {
 	public void setValue(int value) {
 		this.value = value;
 	}
+	
+	public String getGroup() {
+		return group;
+	}
+	
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	
 	@Override
 	public String toString() {
 		return name+ "=" + value;

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.GroupLayout;
 
@@ -197,6 +198,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     			for (int k = 0; k < values.length; k++) {
 					int value = Integer.parseInt(values[k]);
 					Variable v = new Variable();
+					v.setGroup(""+i);
 	    			v.setName(varName);
 	    			v.setValue(value);
 	    			solver.addVariable(v);	
@@ -210,8 +212,16 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     }
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        InputClueDialog icd= new InputClueDialog(this);
-        icd.setVisible(true);
+        /*InputClueDialog icd= new InputClueDialog(this);
+        icd.setVisible(true);*/
+    	
+    	String clueAsString = JOptionPane.showInputDialog("CLue", "Write your clue!!");
+    	SingleClue c =ClueUtils.parseStringToClue(clueAsString);
+    	if(c!= null){
+    		solver.addClue(c);
+    		System.out.println(c);
+    		updateCluesList();
+    	}
     }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

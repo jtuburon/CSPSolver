@@ -16,12 +16,12 @@ public class InputClueDialog extends javax.swing.JFrame {
 
     /**
      * Creates new form InputClueDialog
-     */
+    */
     public InputClueDialog(InputCSPJFrame cspMainFrame) {
         this.cspMainFrame= cspMainFrame;
         initComponents();
-        
     }
+    
     
     public SingleClue getClue() {
         return clue;
@@ -121,4 +121,6 @@ public class InputClueDialog extends javax.swing.JFrame {
     private javax.swing.JComboBox relationshipCB;
     private javax.swing.JTextField valueTF;
     // End of variables declaration//GEN-END:variables
+    
+    
 }
