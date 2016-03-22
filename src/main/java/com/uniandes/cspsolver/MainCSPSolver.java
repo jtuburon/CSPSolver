@@ -57,10 +57,10 @@ public class MainCSPSolver
 		
 		
 		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
-		tvc.setDstVar("A1");
+		tvc.setDstVar("B2");
 		tvc.setRelationship("=");
-		tvc.setSrcVar("B2");
-		tvc.setOperator("+");
+		tvc.setSrcVar("A1");
+		tvc.setOperator("-");
 		tvc.setValue(1);
 		clues.add(tvc);
 		

@@ -88,30 +88,164 @@ rule "Process TwoVarsMultiplesAssignmentClues"
 end
 
 
-rule "ThreeVarsInTwoClues"
+rule "ThreeVarsInTwoClues01"
 	salience 400
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
-		c2: TwoVarsRelationshipClue($v3: dstVar, relationship == "=",  $v2== srcVar, $op02: operator)
+		c2: TwoVarsRelationshipClue($v3: dstVar , relationship == "=",  $v2== srcVar, $op02: operator)
 		$assignments: HashMap(size==1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(
-		        	if($op01.equals("+") && $op02.equals("+")){
-			        	String key = ""+v1.getValue()+"::"+v2.getValue()+"::"+v3.getValue();
-			        	if(h.get(key)==null && v2.getValue()== c1.getValue() + v1.getValue() && v3.getValue()== c2.getValue() + v2.getValue()){
-			        		ArrayList<Variable> vars =new ArrayList();
-			        		vars.add(v1);
-			        		vars.add(v2);
-			        		vars.add(v3);
-			        		h.put(key, vars);
-			        	}
-		        	}
+		        	String key = ""+v1.getValue()+"::"+v2.getValue()+"::"+v3.getValue();
+			        boolean sw=false;
+			        sw=  ($op01.equals("+") && $op02.equals("+") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v2.getValue() + c2.getValue() );
+			        sw|= ($op01.equals("+") && $op02.equals("-") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v2.getValue() - c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("*") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v2.getValue() * c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("/") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v2.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("-") && $op02.equals("+") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v2.getValue() + c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("-") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v2.getValue() - c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("*") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v2.getValue() * c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("/") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v2.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("*") && $op02.equals("+") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v2.getValue() + c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("-") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v2.getValue() - c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("*") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v2.getValue() * c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("/") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v2.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("/") && $op02.equals("+") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v2.getValue() + c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("-") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v2.getValue() - c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("*") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v2.getValue() * c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("/") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v2.getValue() / c2.getValue());
+			        if(h.get(key)==null && sw){
+			        	ArrayList<Variable> vars =new ArrayList();
+		        		vars.add(v1);
+		        		vars.add(v2);
+		        		vars.add(v3);
+		        		h.put(key, vars);
+			        }
 		        ),
 		        result(h)
 		    );
 	then
-		System.out.println("3Vars2Clues ==>>");
+		System.out.println("3Vars2Clues01 ==>>");
+		System.out.println($assignments);
+		String key= (String)$assignments.keySet().iterator().next();
+		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
+		for(int i=0; i<vars.size(); i++){
+			Variable v= vars.get(i);
+			SingleClue sc= new SingleClue();
+			sc.setDstVar(v.getName());
+			sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+			sc.setValue(v.getValue());
+			insert(sc);
+		}
+end
+
+
+rule "ThreeVarsInTwoClues02"
+	salience 400
+	when
+		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
+		c2: TwoVarsRelationshipClue(this!= c1, $v3: dstVar , relationship == "=",  $v1== srcVar, $op02: operator)
+		$assignments: HashMap(size>=1)
+		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
+		        init( HashMap h = new HashMap();),
+		        action(
+		        	String key = ""+v1.getValue()+"::"+v2.getValue()+"::"+v3.getValue();
+			        boolean sw=false;
+			        sw=  ($op01.equals("+") && $op02.equals("+") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v1.getValue() + c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("-") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v1.getValue() - c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("*") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v1.getValue() * c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("/") && v2.getValue()== v1.getValue() + c1.getValue() && v3.getValue()== v1.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("-") && $op02.equals("+") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v1.getValue() + c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("-") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v1.getValue() - c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("*") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v1.getValue() * c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("/") && v2.getValue()== v1.getValue() - c1.getValue() && v3.getValue()== v1.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("*") && $op02.equals("+") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v1.getValue() + c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("-") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v1.getValue() - c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("*") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v1.getValue() * c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("/") && v2.getValue()== v1.getValue() * c1.getValue() && v3.getValue()== v1.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("/") && $op02.equals("+") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v1.getValue() + c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("-") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v1.getValue() - c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("*") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v1.getValue() * c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("/") && v2.getValue()== v1.getValue() / c1.getValue() && v3.getValue()== v1.getValue() / c2.getValue());
+			        if(h.get(key)==null && sw){
+			        	ArrayList<Variable> vars =new ArrayList();
+		        		vars.add(v1);
+		        		vars.add(v2);
+		        		vars.add(v3);
+		        		h.put(key, vars);
+			        }
+		        ),
+		        result(h)
+		    );
+	then
+		System.out.println("3Vars2Clues02 ==>>");
+		System.out.println(c1);
+		System.out.println(c2);
+		System.out.println($assignments);
+		String key= (String)$assignments.keySet().iterator().next();
+		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
+		for(int i=0; i<vars.size(); i++){
+			Variable v= vars.get(i);
+			SingleClue sc= new SingleClue();
+			sc.setDstVar(v.getName());
+			sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+			sc.setValue(v.getValue());
+			insert(sc);
+		}
+end
+
+
+rule "ThreeVarsInTwoClues03"
+	salience 400
+	when
+		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
+		c2: TwoVarsRelationshipClue(this!= c1, $v2== dstVar, relationship == "=", $v3: srcVar , $op02: operator)
+		$assignments: HashMap(size>=1)
+		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
+		        init( HashMap h = new HashMap();),
+		        action(
+		        	String key = ""+v1.getValue()+"::"+v2.getValue()+"::"+v3.getValue();
+			        boolean sw=false;
+			        sw=  ($op01.equals("+") && $op02.equals("+") && v2.getValue()== v1.getValue() + c1.getValue() && v2.getValue()== v3.getValue() + c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("-") && v2.getValue()== v1.getValue() + c1.getValue() && v2.getValue()== v3.getValue() - c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("*") && v2.getValue()== v1.getValue() + c1.getValue() && v2.getValue()== v3.getValue() * c2.getValue());
+			        sw|= ($op01.equals("+") && $op02.equals("/") && v2.getValue()== v1.getValue() + c1.getValue() && v2.getValue()== v3.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("-") && $op02.equals("+") && v2.getValue()== v1.getValue() - c1.getValue() && v2.getValue()== v3.getValue() + c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("-") && v2.getValue()== v1.getValue() - c1.getValue() && v2.getValue()== v3.getValue() - c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("*") && v2.getValue()== v1.getValue() - c1.getValue() && v2.getValue()== v3.getValue() * c2.getValue());
+			        sw|= ($op01.equals("-") && $op02.equals("/") && v2.getValue()== v1.getValue() - c1.getValue() && v2.getValue()== v3.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("*") && $op02.equals("+") && v2.getValue()== v1.getValue() * c1.getValue() && v2.getValue()== v3.getValue() + c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("-") && v2.getValue()== v1.getValue() * c1.getValue() && v2.getValue()== v3.getValue() - c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("*") && v2.getValue()== v1.getValue() * c1.getValue() && v2.getValue()== v3.getValue() * c2.getValue());
+			        sw|= ($op01.equals("*") && $op02.equals("/") && v2.getValue()== v1.getValue() * c1.getValue() && v2.getValue()== v3.getValue() / c2.getValue());
+			        
+			        sw|= ($op01.equals("/") && $op02.equals("+") && v2.getValue()== v1.getValue() / c1.getValue() && v2.getValue()== v3.getValue() + c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("-") && v2.getValue()== v1.getValue() / c1.getValue() && v2.getValue()== v3.getValue() - c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("*") && v2.getValue()== v1.getValue() / c1.getValue() && v2.getValue()== v3.getValue() * c2.getValue());
+			        sw|= ($op01.equals("/") && $op02.equals("/") && v2.getValue()== v1.getValue() / c1.getValue() && v2.getValue()== v3.getValue() / c2.getValue());
+			        if(h.get(key)==null && sw){
+			        	ArrayList<Variable> vars =new ArrayList();
+		        		vars.add(v1);
+		        		vars.add(v2);
+		        		vars.add(v3);
+		        		h.put(key, vars);
+			        }
+		        ),
+		        result(h)
+		    );
+	then
+		System.out.println("3Vars2Clues03 ==>>");
+		System.out.println(c1);
+		System.out.println(c2);
 		System.out.println($assignments);
 		String key= (String)$assignments.keySet().iterator().next();
 		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
