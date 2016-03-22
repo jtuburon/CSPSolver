@@ -24,11 +24,35 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<SingleClue>();
+		
+		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
+		tvc.setDstVar("A3");
+		tvc.setRelationship("=");
+		tvc.setSrcVar("A2");
+		tvc.setOperator("+");
+		tvc.setValue(1);
+		clues.add(tvc);
+		
 		SingleClue c= new SingleClue();
-		c.setDstVar("A1");
+		c.setDstVar("B2");
 		c.setRelationship("=");
-		c.setValue("2");
-		clues.add(c); 
+		c.setValue(6);
+		clues.add(c);
+		
+		tvc= new TwoVarsRelationshipClue();
+		tvc.setDstVar("B1");
+		tvc.setRelationship("=");
+		tvc.setSrcVar("A4");
+		tvc.setOperator("+");
+		tvc.setValue(1);
+		clues.add(tvc);
+		
+		c= new SingleClue();
+		c.setDstVar("B3");
+		c.setRelationship("=");
+		c.setValue(5);
+		clues.add(c);
+		
 	}
 	
 	public List<SingleClue> getClues() {

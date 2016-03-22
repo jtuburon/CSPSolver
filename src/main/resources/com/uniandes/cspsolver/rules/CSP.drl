@@ -1,6 +1,7 @@
 package com.uniandes.cspsolver
 
 import java.util.ArrayList
+import java.util.HashMap
 
 rule "Show Variables"
 	salience 1000
@@ -9,7 +10,6 @@ rule "Show Variables"
 	then
 		System.out.println(v);
 end
-
 
 rule "Show Clues"
 	salience 1000
@@ -22,31 +22,81 @@ end
 rule "DirectAssignment"
 	salience 500
 	when
-		c: SingleClue(relationship == "=", $v1: dstVar, value matches "\\d+")
+		c: SingleClue(class==SingleClue, relationship == "=", $v1: dstVar, value matches "\\d+")
 		v1: Variable(name==c.dstVar, value != c.value, $g: group)
 	then		
 		retract(v1);
-		System.out.println("Removed:" + v1);
+		System.out.println("Removed:" + v1 + " , due to: "+ c);
 end
 
 rule "DirectAssignmentPropagation"
-	salience 500
+	salience 450
 	when
 		v: Variable()
 		$values : ArrayList( size == 1 )
         	from collect(Variable (name== v.name))
         $var: Variable(group== v.group, value==v.value, name!= v.name)  
 	then
-		System.out.println("Removed:" + $var);
+		System.out.println("Removed:" + $var + " , due to: " +v);
 		retract($var);
 end
 
 
-rule "Process TwoVarsClues"
-	salience 1000
+rule "Process TwoVarsMultiplesAssignmentClues"
+	salience 400
 	when
-		c: TwoVarsRelationshipClue()
+		c: TwoVarsRelationshipClue($dv: dstVar, relationship == "=",  $sv: srcVar, $operator: operator)		
+		$assignments: HashMap(size==1)
+		    from accumulate( dv: Variable(name== $dv) and sv: Variable(name== $sv),
+		        init( HashMap h = new HashMap();),
+		        action(
+		        	if($operator.equals("+")){
+			        	if(dv.getValue()== c.getValue() + sv.getValue())
+			            	h.put(dv, sv);
+		        	}
+		        	if($operator.equals("-")){
+			        	if(dv.getValue()== c.getValue() - sv.getValue())
+			            	h.put(dv, sv);
+		        	}
+		        	if($operator.equals("*")){
+			        	if(dv.getValue()== c.getValue() * sv.getValue())
+			            	h.put(dv, sv);
+		        	}
+		        	if($operator.equals("/")){
+			        	if(dv.getValue()== c.getValue() / sv.getValue())
+			            	h.put(dv, sv);
+		        	}
+		        ),
+		        result(h)
+		    );
 	then
-		System.out.println("TVRC==>>");
-		System.out.println(c);
+		System.out.println("TVRC ==>>");
+		Variable dest= (Variable)$assignments.keySet().iterator().next();
+		Variable source= (Variable)$assignments.get(dest);
+		
+		SingleClue sc1= new SingleClue();
+		sc1.setDstVar(dest.getName());
+		sc1.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+		sc1.setValue(dest.getValue());
+		insert(sc1);
+		
+		SingleClue sc2= new SingleClue();
+		sc2.setDstVar(source.getName());
+		sc2.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+		sc2.setValue(source.getValue());
+		insert(sc2);
+end
+
+
+
+
+rule "Show Solution"
+	salience 0
+	when
+		array: ArrayList(size == 8)
+        	from collect(Variable())
+	then
+		System.out.println("Solution Found");
+		System.out.println(array);
+		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + array, "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 end

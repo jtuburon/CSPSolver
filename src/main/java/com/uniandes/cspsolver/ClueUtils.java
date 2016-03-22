@@ -16,7 +16,7 @@ public class ClueUtils {
 				c = new SingleClue();
 				c.setDstVar(m.group("variable"));
 				c.setRelationship(m.group("relation"));
-				c.setValue(m.group("value"));
+				c.setValue(Integer.parseInt(m.group("value")));
 			}
 		}else{
 			if(clueAsString.matches(Clue.TWO_VARS_RELATIONSHIP_PATTERN)){
@@ -29,7 +29,7 @@ public class ClueUtils {
 					clue.setRelationship(m.group("relation"));
 					clue.setSrcVar(m.group("srcvariable"));
 					clue.setOperator(m.group("operator"));
-					clue.setValue(m.group("value"));
+					clue.setValue(Integer.parseInt(m.group("value")));
 					c=clue;
 					System.out.println(clue);
 				}

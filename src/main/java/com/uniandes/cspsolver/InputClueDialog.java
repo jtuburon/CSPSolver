@@ -105,7 +105,7 @@ public class InputClueDialog extends javax.swing.JFrame {
             SingleClue clue= new SingleClue();
             clue.setDstVar(dstVarCB.getSelectedItem().toString());
             clue.setRelationship(relationshipCB.getSelectedItem().toString());
-            clue.setValue(valueTF.getText());
+            clue.setValue(Integer.parseInt(valueTF.getText()));
             
             cspMainFrame.addClue(clue);
             cspMainFrame.updateCluesList();

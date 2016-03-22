@@ -3,7 +3,7 @@ package com.uniandes.cspsolver;
 public class SingleClue {
 	private String dstVar;
 	private String relationship;
-	private String value;
+	private int value;
 	
 	public SingleClue() {
 		// TODO Auto-generated constructor stub
@@ -27,11 +27,11 @@ public class SingleClue {
 		this.relationship = relationship;
 	}
 	
-	public String getValue() {
+	public int getValue() {
 		return value;
 	}
 	
-	public void setValue(String value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 	
