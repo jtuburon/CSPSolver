@@ -60,7 +60,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         d1TF = new javax.swing.JTextField();
-        d1TF.setText("4,5,6,7");
+        d1TF.setText("1,2,3,4");
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cluesJList = new javax.swing.JList();

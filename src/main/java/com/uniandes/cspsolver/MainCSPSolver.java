@@ -25,6 +25,7 @@ public class MainCSPSolver
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<SingleClue>();
 		
+		/*
 		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
 		tvc.setDstVar("A3");
 		tvc.setRelationship("=");
@@ -51,6 +52,38 @@ public class MainCSPSolver
 		c.setDstVar("B3");
 		c.setRelationship("=");
 		c.setValue(5);
+		clues.add(c);
+		*/
+		
+		
+		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
+		tvc.setDstVar("A1");
+		tvc.setRelationship("=");
+		tvc.setSrcVar("B2");
+		tvc.setOperator("+");
+		tvc.setValue(1);
+		clues.add(tvc);
+		
+		tvc= new TwoVarsRelationshipClue();
+		tvc.setDstVar("B2");
+		tvc.setRelationship("=");
+		tvc.setSrcVar("B4");
+		tvc.setOperator("+");
+		tvc.setValue(1);
+		clues.add(tvc);
+		
+		tvc= new TwoVarsRelationshipClue();
+		tvc.setDstVar("A3");
+		tvc.setRelationship("=");
+		tvc.setSrcVar("B3");
+		tvc.setOperator("+");
+		tvc.setValue(0);
+		clues.add(tvc);
+		
+		SingleClue c= new SingleClue();
+		c.setDstVar("A4");
+		c.setRelationship("=");
+		c.setValue(3);
 		clues.add(c);
 		
 	}
