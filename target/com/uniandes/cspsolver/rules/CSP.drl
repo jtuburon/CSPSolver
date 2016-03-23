@@ -29,6 +29,73 @@ rule "DirectAssignment"
 		System.out.println("Removed:" + v1 + " , due to: "+ c);
 end
 
+rule "NonDirectAssignment"
+	salience 500
+	when
+		c: SingleClue(class==SingleClue, relationship != "=", $v1: dstVar, value matches "\\d+")
+		$values : ArrayList(size==1)
+		    from accumulate(v: Variable(name== $v1),
+		        init( ArrayList list = new ArrayList();),
+		        action(
+		        	if(c.getRelationship().equals(">") && v.getValue() > c.getValue()){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals(">=") && v.getValue() >= c.getValue()){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals("<") && v.getValue() < c.getValue()){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals("<=") && v.getValue() <= c.getValue()){
+		        		list.add(v);
+		        	}
+		        ),
+		        result(list)
+		    );
+	then	
+		Variable v = (Variable) $values.get(0);
+		SingleClue sc= new SingleClue();
+		sc.setDstVar(v.getName());
+		sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+		sc.setValue(v.getValue());
+		System.out.println("NonDirectAssignment::");
+		System.out.println(sc+ " added due to: " +  c);
+		insert(sc);
+end
+
+
+rule "SingleDomainRestriction"
+	salience 500
+	when
+		c: SingleClue(class==SingleClue, relationship != "=", $v1: dstVar, value matches "\\d+")
+		$values : ArrayList()
+		    from accumulate(v: Variable(name== $v1),
+		        init( ArrayList list = new ArrayList();),
+		        action(
+		        	if(c.getRelationship().equals(">") && !(v.getValue() > c.getValue())){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals(">=") && !(v.getValue() >= c.getValue())){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals("<") && !(v.getValue() < c.getValue())){
+		        		list.add(v);
+		        	}
+		        	if(c.getRelationship().equals("<=") && !(v.getValue() <= c.getValue())){
+		        		list.add(v);
+		        	}
+		        ),
+		        result(list)
+		    );
+	then	
+		for(int i=0; i< $values.size();i++){
+			Variable v = (Variable) $values.get(i);
+			System.out.println(v+ " removed due to: " +  c);
+			retract(v);
+		}
+end
+
+
 rule "DirectAssignmentPropagation"
 	salience 450
 	when

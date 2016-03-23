@@ -1,6 +1,6 @@
 package com.uniandes.cspsolver;
 
-public class Clue {
+public interface Clue {
 	public final static String EQUIVALENCE_RELATIONSHIP="=";
 	public final static String GT_RELATIONSHIP=">";
 	public final static String LT_RELATIONSHIP="<";
@@ -15,7 +15,7 @@ public class Clue {
 	
 	public final static String VARIABLE_PATTERN="(?<variable>(A|B)[1-4])";
 	public final static String WHITESPACES_PATTERN="\\s*";
-	public final static String RELATIONSHIP_PATTERN="(?<relation>("+EQUIVALENCE_RELATIONSHIP + "))";
+	public final static String RELATIONSHIP_PATTERN="(?<relation>("+EQUIVALENCE_RELATIONSHIP + "|" + GT_RELATIONSHIP + "|" + LT_RELATIONSHIP + "|" + G_E_T_RELATIONSHIP + "|" + L_E_T_RELATIONSHIP+"))";
 	public final static String VALUE_PATTERN="(?<value>\\d+)";
 	
 	public final static String SRC_VARIABLE_PATTERN="(?<srcvariable>(A|B)[1-4])";

@@ -24,7 +24,7 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<SingleClue>();
-			
+		this.initCSP03();	
 	}
 	
 	private void initCSP01(){
@@ -87,6 +87,14 @@ public class MainCSPSolver
 		c.setDstVar("A4");
 		c.setRelationship("=");
 		c.setValue(3);
+		clues.add(c);
+	}
+	
+	private void initCSP03(){
+		SingleClue c= new SingleClue();
+		c.setDstVar("A1");
+		c.setRelationship("<=");
+		c.setValue(2);
 		clues.add(c);
 	}
 	
