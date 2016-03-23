@@ -20,7 +20,7 @@ rule "Show Clues"
 end
 
 rule "DirectAssignment"
-	salience 500
+	salience 600
 	when
 		c: SingleClue(class==SingleClue, relationship == "=", $v1: dstVar, value matches "\\d+")
 		v1: Variable(name==c.dstVar, value != c.value, $g: group)
@@ -29,46 +29,23 @@ rule "DirectAssignment"
 		System.out.println("Removed:" + v1 + " , due to: "+ c);
 end
 
-rule "NonDirectAssignment"
-	salience 500
+rule "DirectAssignmentPropagation"
+	salience 650
 	when
-		c: SingleClue(class==SingleClue, relationship != "=", $v1: dstVar, value matches "\\d+")
-		$values : ArrayList(size==1)
-		    from accumulate(v: Variable(name== $v1),
-		        init( ArrayList list = new ArrayList();),
-		        action(
-		        	if(c.getRelationship().equals(">") && v.getValue() > c.getValue()){
-		        		list.add(v);
-		        	}
-		        	if(c.getRelationship().equals(">=") && v.getValue() >= c.getValue()){
-		        		list.add(v);
-		        	}
-		        	if(c.getRelationship().equals("<") && v.getValue() < c.getValue()){
-		        		list.add(v);
-		        	}
-		        	if(c.getRelationship().equals("<=") && v.getValue() <= c.getValue()){
-		        		list.add(v);
-		        	}
-		        ),
-		        result(list)
-		    );
-	then	
-		Variable v = (Variable) $values.get(0);
-		SingleClue sc= new SingleClue();
-		sc.setDstVar(v.getName());
-		sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
-		sc.setValue(v.getValue());
-		System.out.println("NonDirectAssignment::");
-		System.out.println(sc+ " added due to: " +  c);
-		insert(sc);
+		v: Variable()
+		$values : ArrayList( size == 1 )
+        	from collect(Variable (name== v.name))
+        $var: Variable(group== v.group, value==v.value, name!= v.name)  
+	then
+		System.out.println("Removed:" + $var + " , due to: " +v);
+		retract($var);
 end
-
 
 rule "SingleDomainRestriction"
 	salience 500
 	when
-		c: SingleClue(class==SingleClue, relationship != "=", $v1: dstVar, value matches "\\d+")
-		$values : ArrayList()
+		c: SingleClue(class==SingleClue, relationship != Clue.EQUIVALENCE_RELATIONSHIP, $v1: dstVar, value matches "\\d+")
+		$values : ArrayList(size>0)
 		    from accumulate(v: Variable(name== $v1),
 		        init( ArrayList list = new ArrayList();),
 		        action(
@@ -88,26 +65,13 @@ rule "SingleDomainRestriction"
 		        result(list)
 		    );
 	then	
+		System.out.println("SingleDomainRestriction::");
 		for(int i=0; i< $values.size();i++){
 			Variable v = (Variable) $values.get(i);
 			System.out.println(v+ " removed due to: " +  c);
 			retract(v);
 		}
 end
-
-
-rule "DirectAssignmentPropagation"
-	salience 450
-	when
-		v: Variable()
-		$values : ArrayList( size == 1 )
-        	from collect(Variable (name== v.name))
-        $var: Variable(group== v.group, value==v.value, name!= v.name)  
-	then
-		System.out.println("Removed:" + $var + " , due to: " +v);
-		retract($var);
-end
-
 
 rule "Process TwoVarsMultiplesAssignmentClues"
 	salience 400
@@ -153,7 +117,6 @@ rule "Process TwoVarsMultiplesAssignmentClues"
 		sc2.setValue(source.getValue());
 		insert(sc2);
 end
-
 
 rule "ThreeVarsInTwoClues01"
 	salience 400
@@ -329,7 +292,7 @@ end
 
 
 rule "Show Solution"
-	salience 0
+	salience 1000
 	when
 		array: ArrayList(size == 8)
         	from collect(Variable())
