@@ -24,8 +24,10 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<SingleClue>();
-		
-		/*
+			
+	}
+	
+	private void initCSP01(){
 		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
 		tvc.setDstVar("A3");
 		tvc.setRelationship("=");
@@ -53,22 +55,23 @@ public class MainCSPSolver
 		c.setRelationship("=");
 		c.setValue(5);
 		clues.add(c);
-		*/
 		
-		
+	}
+	
+	private void initCSP02(){
 		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
-		tvc.setDstVar("B2");
+		tvc.setDstVar("A1");
 		tvc.setRelationship("=");
-		tvc.setSrcVar("A1");
-		tvc.setOperator("-");
+		tvc.setSrcVar("B2");
+		tvc.setOperator("+");
 		tvc.setValue(1);
 		clues.add(tvc);
 		
 		tvc= new TwoVarsRelationshipClue();
-		tvc.setDstVar("B2");
+		tvc.setDstVar("B4");
 		tvc.setRelationship("=");
-		tvc.setSrcVar("B4");
-		tvc.setOperator("+");
+		tvc.setSrcVar("B2");
+		tvc.setOperator("-");
 		tvc.setValue(1);
 		clues.add(tvc);
 		
@@ -85,7 +88,6 @@ public class MainCSPSolver
 		c.setRelationship("=");
 		c.setValue(3);
 		clues.add(c);
-		
 	}
 	
 	public List<SingleClue> getClues() {
