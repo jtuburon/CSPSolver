@@ -44,7 +44,7 @@ end
 rule "SingleDomainRestriction"
 	salience 500
 	when
-		c: SingleClue(class==SingleClue, relationship != Clue.EQUIVALENCE_RELATIONSHIP, $v1: dstVar, value matches "\\d+")
+		c: SingleClue(class==SingleClue, relationship != InputPattern.EQUIVALENCE_RELATIONSHIP, $v1: dstVar, value matches "\\d+")
 		$values : ArrayList(size>0)
 		    from accumulate(v: Variable(name== $v1),
 		        init( ArrayList list = new ArrayList();),
@@ -107,13 +107,13 @@ rule "Process TwoVarsMultiplesAssignmentClues"
 		
 		SingleClue sc1= new SingleClue();
 		sc1.setDstVar(dest.getName());
-		sc1.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+		sc1.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 		sc1.setValue(dest.getValue());
 		insert(sc1);
 		
 		SingleClue sc2= new SingleClue();
 		sc2.setDstVar(source.getName());
-		sc2.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+		sc2.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 		sc2.setValue(source.getValue());
 		insert(sc2);
 end
@@ -167,7 +167,7 @@ rule "ThreeVarsInTwoClues01"
 			Variable v= vars.get(i);
 			SingleClue sc= new SingleClue();
 			sc.setDstVar(v.getName());
-			sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 			sc.setValue(v.getValue());
 			insert(sc);
 		}
@@ -225,7 +225,7 @@ rule "ThreeVarsInTwoClues02"
 			Variable v= vars.get(i);
 			SingleClue sc= new SingleClue();
 			sc.setDstVar(v.getName());
-			sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 			sc.setValue(v.getValue());
 			insert(sc);
 		}
@@ -283,7 +283,7 @@ rule "ThreeVarsInTwoClues03"
 			Variable v= vars.get(i);
 			SingleClue sc= new SingleClue();
 			sc.setDstVar(v.getName());
-			sc.setRelationship(Clue.EQUIVALENCE_RELATIONSHIP);
+			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 			sc.setValue(v.getValue());
 			insert(sc);
 		}

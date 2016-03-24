@@ -8,9 +8,8 @@ public class ClueUtils {
 	
 	public static SingleClue parseStringToClue(String clueAsString){
 		SingleClue c=null;
-		if(clueAsString.matches(Clue.SINGLE_RELATIONSHIP_PATTERN)){
-			Pattern p = Pattern.compile(Clue.SINGLE_RELATIONSHIP_PATTERN);
-			System.out.println(p.toString());
+		if(clueAsString.matches(InputPattern.SINGLE_RELATIONSHIP_PATTERN)){
+			Pattern p = Pattern.compile(InputPattern.SINGLE_RELATIONSHIP_PATTERN);
 			Matcher m= p.matcher(clueAsString);
 			if(m.find()){
 				c = new SingleClue();
@@ -19,9 +18,8 @@ public class ClueUtils {
 				c.setValue(Integer.parseInt(m.group("value")));
 			}
 		}else{
-			if(clueAsString.matches(Clue.TWO_VARS_RELATIONSHIP_PATTERN)){
-				Pattern p = Pattern.compile(Clue.TWO_VARS_RELATIONSHIP_PATTERN);
-				System.out.println(p.toString());
+			if(clueAsString.matches(InputPattern.TWO_VARS_RELATIONSHIP_PATTERN)){
+				Pattern p = Pattern.compile(InputPattern.TWO_VARS_RELATIONSHIP_PATTERN);
 				Matcher m= p.matcher(clueAsString);
 				if(m.find()){
 					TwoVarsRelationshipClue clue = new TwoVarsRelationshipClue();

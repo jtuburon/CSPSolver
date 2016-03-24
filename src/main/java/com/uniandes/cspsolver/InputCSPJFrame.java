@@ -2,12 +2,23 @@ package com.uniandes.cspsolver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.GroupLayout;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import java.awt.Window.Type;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,6 +38,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
      * Creates new form InputCSPJFrame
      */
     public InputCSPJFrame() {
+    	setResizable(false);
     	solver= new MainCSPSolver();
         initComponents();
         updateCluesList();
@@ -58,9 +70,6 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         jScrollBar1 = new javax.swing.JScrollBar();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        d1TF = new javax.swing.JTextField();
-        d1TF.setText("4,5,6,7");
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         cluesJList = new javax.swing.JList();
@@ -68,35 +77,107 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         solveBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("D1");
-
-        d1TF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setBorder(new TitledBorder(null, "Independent Dimension Domain", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        
+        panel_1 = new JPanel();
+        panel_1.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Dependent Dimensions", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        
+        lblDim = new JLabel();
+        lblDim.setText("Dim01");
+        
+        dim01TF = new JTextField();
+        
+        lblDim_1 = new JLabel();
+        lblDim_1.setText("Dim02");
+        
+        dim02TF = new JTextField();
+        GroupLayout gl_panel_1 = new GroupLayout(panel_1);
+        gl_panel_1.setHorizontalGroup(
+        	gl_panel_1.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_panel_1.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_panel_1.createSequentialGroup()
+        					.addComponent(lblDim, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(dim01TF, GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE))
+        				.addGroup(gl_panel_1.createSequentialGroup()
+        					.addComponent(lblDim_1, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(dim02TF, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)))
+        			.addContainerGap())
+        );
+        gl_panel_1.setVerticalGroup(
+        	gl_panel_1.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_panel_1.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(dim01TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(lblDim))
+        			.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_panel_1.createSequentialGroup()
+        					.addGap(14)
+        					.addComponent(lblDim_1))
+        				.addGroup(gl_panel_1.createSequentialGroup()
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addComponent(dim02TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        			.addContainerGap(49, Short.MAX_VALUE))
+        );
+        panel_1.setLayout(gl_panel_1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1Layout.setHorizontalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addComponent(jLabel1)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(d1TF, 361, 361, 361)
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         			.addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(jLabel1)
-        				.addComponent(d1TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        			.addContainerGap(230, Short.MAX_VALUE))
+        			.addComponent(panel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(83, Short.MAX_VALUE))
         );
+        jLabel1 = new javax.swing.JLabel();
+        
+                jLabel1.setText("Domain");
+        d1TF = new javax.swing.JTextField();
+        d1TF.setText("{4,5,6,7}");
+        
+                d1TF.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jTextField1ActionPerformed(evt);
+                    }
+                });
+        GroupLayout gl_panel = new GroupLayout(panel);
+        gl_panel.setHorizontalGroup(
+        	gl_panel.createParallelGroup(Alignment.LEADING)
+        		.addGroup(gl_panel.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jLabel1)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(d1TF, GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+        			.addContainerGap())
+        );
+        gl_panel.setVerticalGroup(
+        	gl_panel.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(gl_panel.createSequentialGroup()
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(d1TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(jLabel1))
+        			.addContainerGap())
+        );
+        panel.setLayout(gl_panel);
         jPanel1.setLayout(jPanel1Layout);
 
         jTabbedPane1.addTab("Variables Domains", jPanel1);
@@ -121,31 +202,31 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 231, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
-                .addContainerGap())
+        	jPanel2Layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(jPanel2Layout.createSequentialGroup()
+        			.addGap(111)
+        			.addComponent(jButton3)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(jButton2)
+        			.addContainerGap())
+        		.addGroup(Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(217, 217, 217))
+        	jPanel2Layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(jPanel2Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(jButton2)
+        				.addComponent(jButton3))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(269, Short.MAX_VALUE))
         );
+        jPanel2.setLayout(jPanel2Layout);
 
         jTabbedPane1.addTab("Clues", jPanel2);
 
@@ -158,43 +239,52 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(solveBtn))
-                    .addComponent(jTabbedPane1))
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(solveBtn, Alignment.TRAILING))
+        			.addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(solveBtn)
-                .addContainerGap())
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        			.addComponent(solveBtn)
+        			.addContainerGap())
         );
+        getContentPane().setLayout(layout);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    	this.initVariables();
-    	solver.initFacts();
-    	solver.solve();
+    	String domainAsString=d1TF.getText();
+    	if(InputPattern.validateDomainInput(domainAsString)){
+    		this.initVariables();
+        	solver.initFacts();
+        	solver.solve();	
+    	}else{
+    		JOptionPane.showMessageDialog(null, "El dominio no satisface el formato {v1,v2,v3,v4}", "Dominio Invalido", JOptionPane.ERROR_MESSAGE);
+    	}
+    	
     }
     
     private void initVariables(){
+    	String domainAsString =d1TF.getText();
+    	Pattern p = Pattern.compile(InputPattern.DOMAIN_PATTERN);
+		Matcher m= p.matcher(domainAsString);
+		if(m.find()){
+			domainAsString= m.group("domain");
+		}
+    	domainAsString= domainAsString.replaceAll("\\s+", "");
+		String values[]= domainAsString.split(",");
     	for(char i='A'; i<='B'; i++){
     		for(int j=1; j<=4; j++){
     			String varName= ""+i+j;
-    			String domainAsString="";
-    			domainAsString=d1TF.getText();
-    			
-    			String values[]= domainAsString.split(",");
     			for (int k = 0; k < values.length; k++) {
 					int value = Integer.parseInt(values[k]);
 					Variable v = new Variable();
@@ -267,5 +357,9 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField d1TF;
-    // End of variables declaration//GEN-END:variables
+    private JPanel panel_1;
+    private JLabel lblDim;
+    private JTextField dim01TF;
+    private JLabel lblDim_1;
+    private JTextField dim02TF;
 }
