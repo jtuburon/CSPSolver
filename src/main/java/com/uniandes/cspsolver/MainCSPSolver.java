@@ -14,7 +14,7 @@ import org.kie.api.runtime.KieSession;
 public class MainCSPSolver 
 {
 	private List<Variable> variables;
-	private List<SingleClue> clues;
+	private List<Clue> clues;
 	
 	private KieSession kSession;
 	
@@ -23,7 +23,7 @@ public class MainCSPSolver
 		KieContainer kContainer = ks.getKieClasspathContainer();
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
-		clues = new ArrayList<SingleClue>();
+		clues = new ArrayList<Clue>();
 		this.initCSP01();
 		//this.initCSPTest();
 	}
@@ -73,7 +73,7 @@ public class MainCSPSolver
 		clues.add(c);
 	}
 	
-	public List<SingleClue> getClues() {
+	public List<Clue> getClues() {
 		return clues;
 	}
 	
@@ -91,7 +91,7 @@ public class MainCSPSolver
 		}
 	}
 
-	public void addClue(SingleClue c) {
+	public void addClue(Clue c) {
 		clues.add(c);
 	}
 	
@@ -100,12 +100,12 @@ public class MainCSPSolver
 	}
 	
 	public void initFacts(){
-		for (Iterator iterator = variables.iterator(); iterator.hasNext();) {
-			Variable v = (Variable) iterator.next();
+		for (int i=0; i< variables.size();i++) {
+			Variable v = variables.get(i);
 			kSession.insert(v);
 		}
-		for (Iterator iterator = clues.iterator(); iterator.hasNext();) {
-			SingleClue clue = (SingleClue) iterator.next();
+		for (int i=0; i< clues.size();i++) {
+			Clue clue = clues.get(i);
 			kSession.insert(clue);
 		}
 	}

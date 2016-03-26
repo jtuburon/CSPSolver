@@ -14,7 +14,7 @@ end
 rule "Show Clues"
 	salience 1000
 	when
-		c: SingleClue()
+		c: Clue()
 	then
 		System.out.println(c);
 end

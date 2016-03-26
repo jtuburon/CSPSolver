@@ -1,6 +1,6 @@
 package com.uniandes.cspsolver;
 
-public class SingleClue {
+public class SingleClue extends Clue{
 	private String dstVar;
 	private String relationship;
 	private int value;

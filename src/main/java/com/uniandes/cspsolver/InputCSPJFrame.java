@@ -50,9 +50,9 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     
     public void updateCluesList(){
         DefaultListModel<String> model= new DefaultListModel<String>();
-        List<SingleClue> clues = solver.getClues();
+        List<Clue> clues = solver.getClues();
         for (int i = 0; i < clues.size(); i++) {
-            SingleClue c = clues.get(i);
+            Clue c = clues.get(i);
             model.addElement(c.toString());
         }
         cluesJList.setModel(model);
@@ -330,7 +330,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String clueAsString = JOptionPane.showInputDialog("CLue", "Write your clue!!");
-    	SingleClue c =InputPattern.parseStringToClue(clueAsString);
+    	Clue c =InputPattern.parseStringToClue(clueAsString);
     	if(c!= null){
     		solver.addClue(c);
     		updateCluesList();
@@ -338,7 +338,12 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    
+    	int index = 0;
+    	index= cluesJList.getSelectedIndex();
+    	if(index>-1){
+    		solver.getClues().remove(index);
+    		updateCluesList();
+    	}
     }
 
     /**
