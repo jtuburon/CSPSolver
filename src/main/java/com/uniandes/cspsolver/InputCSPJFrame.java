@@ -89,11 +89,13 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         lblDim.setText("Dim01");
         
         dim01TF = new JTextField();
+        dim01TF.setText("{\"A1\",\"A2\",\"A3\",\"A4\"}");
         
         lblDim_1 = new JLabel();
         lblDim_1.setText("Dim02");
         
         dim02TF = new JTextField();
+        dim02TF.setText("{\"B1\",\"B2\",\"B3\",\"B4\"}");
         GroupLayout gl_panel_1 = new GroupLayout(panel_1);
         gl_panel_1.setHorizontalGroup(
         	gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -264,9 +266,16 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     	String domainAsString=d1TF.getText();
     	if(InputPattern.validateDomainInput(domainAsString)){
-    		this.initVariables();
-        	solver.initFacts();
-        	solver.solve();	
+    		String dim01AsString=dim01TF.getText();
+    		String dim02AsString=dim02TF.getText();
+    		if(InputPattern.validateVariablesAliases(dim01AsString) && InputPattern.validateVariablesAliases(dim02AsString)){
+    			this.initVariables();
+            	solver.initFacts();
+            	solver.solve();
+    		}else{
+    			System.out.println("No wapeo!!");
+    		}
+    			
     	}else{
     		JOptionPane.showMessageDialog(null, "El dominio no satisface el formato {v1,v2,v3,v4}", "Dominio Invalido", JOptionPane.ERROR_MESSAGE);
     	}
@@ -283,13 +292,31 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	domainAsString= domainAsString.replaceAll("\\s+", "");
 		String values[]= domainAsString.split(",");
     	for(char i='A'; i<='B'; i++){
+    		p = Pattern.compile(InputPattern.SINGLE_RELATIONSHIP_PATTERN);
+    		String varAliasesAsString=""; 
+    		switch(i){
+    			case 'A':
+    				varAliasesAsString=dim01TF.getText();
+    				break;
+    			case 'B':
+    				varAliasesAsString=dim02TF.getText();
+    				break;
+    		}
+			m= p.matcher(varAliasesAsString);
+    		
     		for(int j=1; j<=4; j++){
     			String varName= ""+i+j;
+    			String varAlias=varName;
+    			if(m.find()){
+    				varAlias=m.group("alias0"+ j);
+    			}
+    			
     			for (int k = 0; k < values.length; k++) {
 					int value = Integer.parseInt(values[k]);
 					Variable v = new Variable();
 					v.setGroup(""+i);
 	    			v.setName(varName);
+	    			v.setAlias(varAlias);
 	    			v.setValue(value);
 	    			solver.addVariable(v);	
 				}
@@ -302,14 +329,10 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     }
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        /*InputClueDialog icd= new InputClueDialog(this);
-        icd.setVisible(true);*/
-    	
-    	String clueAsString = JOptionPane.showInputDialog("CLue", "Write your clue!!");
-    	SingleClue c =ClueUtils.parseStringToClue(clueAsString);
+        String clueAsString = JOptionPane.showInputDialog("CLue", "Write your clue!!");
+    	SingleClue c =InputPattern.parseStringToClue(clueAsString);
     	if(c!= null){
     		solver.addClue(c);
-    		System.out.println(c);
     		updateCluesList();
     	}
     }

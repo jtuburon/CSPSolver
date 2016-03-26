@@ -5,6 +5,8 @@ import java.util.List;
 public class Variable {
 	private String group;
 	private String name;
+	private String alias;
+	
 	private int value;
 	//private List<Integer> domain;
 	
@@ -20,6 +22,14 @@ public class Variable {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getAlias() {
+		return alias;
+	}
+	
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 	
 	
@@ -62,6 +72,6 @@ public class Variable {
 	
 	@Override
 	public String toString() {
-		return name+ "=" + value;
+		return name+"("+ alias +")" + " = " + value;
 	}
 }
