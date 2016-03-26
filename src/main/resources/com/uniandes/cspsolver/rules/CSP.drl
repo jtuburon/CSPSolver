@@ -179,7 +179,7 @@ rule "ThreeVarsInTwoClues02"
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v3: dstVar , relationship == "=",  $v1== srcVar, $op02: operator)
-		$assignments: HashMap(size>=1)
+		$assignments: HashMap(size==1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(
@@ -237,7 +237,7 @@ rule "ThreeVarsInTwoClues03"
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v2== dstVar, relationship == "=", $v3: srcVar , $op02: operator)
-		$assignments: HashMap(size>=1)
+		$assignments: HashMap(size==1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(

@@ -65,6 +65,17 @@ public class MainCSPSolver
 		
 	}
 	
+	private void initCSP02(){
+		Clue c= InputPattern.parseStringToClue("A2=A3+1000");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("A2=B3+0");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("A1=B2+1000");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B4=9000 XOR B4=A3+0");
+		clues.add(c);
+	}
+	
 	private void initCSPTest(){
 		SingleClue c= new SingleClue();
 		c.setDstVar("A1");
