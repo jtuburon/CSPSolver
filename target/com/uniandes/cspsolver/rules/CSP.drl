@@ -2,6 +2,7 @@ package com.uniandes.cspsolver
 
 import java.util.ArrayList
 import java.util.HashMap
+import java.util.List
 
 rule "Show Variables"
 	salience 1000
@@ -73,6 +74,17 @@ rule "SingleDomainRestriction"
 		}
 end
 
+rule "InValuesClueDomainRestriction"
+	salience 500
+	when
+		c: InValuesClue()
+		v: Variable(name==c.dstVar, c.getValues() not contains value)
+	then	
+		System.out.println("InValuesClueDomainRestriction::");
+		System.out.println(v +" removed due to " + c);
+		retract(v);
+end
+
 rule "Process TwoVarsMultiplesAssignmentClues"
 	salience 400
 	when
@@ -123,7 +135,7 @@ rule "ThreeVarsInTwoClues01"
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue($v3: dstVar , relationship == "=",  $v2== srcVar, $op02: operator)
-		$assignments: HashMap(size==1)
+		$assignments: HashMap(size>=1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(
@@ -160,17 +172,50 @@ rule "ThreeVarsInTwoClues01"
 		    );
 	then
 		System.out.println("3Vars2Clues01 ==>>");
-		System.out.println($assignments);
-		String key= (String)$assignments.keySet().iterator().next();
-		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
-		for(int i=0; i<vars.size(); i++){
-			Variable v= vars.get(i);
-			SingleClue sc= new SingleClue();
-			sc.setDstVar(v.getName());
-			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
-			sc.setValue(v.getValue());
-			insert(sc);
+		System.out.println(c1);
+		System.out.println(c2);
+		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
+		System.out.println(combinations);
+		if(combinations.size()==1){
+			ArrayList<Variable> vars= (ArrayList<Variable>)combinations.get(0);
+			for(int i=0; i<vars.size(); i++){
+				Variable v= vars.get(i);
+				SingleClue sc= new SingleClue();
+				sc.setDstVar(v.getName());
+				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+				sc.setValue(v.getValue());
+				insert(sc);
+			}
+		}else{
+			InValuesClue ivc1= new InValuesClue();
+			ivc1.setDstVar($v1);
+			InValuesClue ivc2= new InValuesClue();
+			ivc2.setDstVar($v2);
+			InValuesClue ivc3= new InValuesClue();
+			ivc3.setDstVar($v3);
+			
+			for(int i=0; i<combinations.size() ;i++){
+				ArrayList<Variable> combination = combinations.get(i);
+				for(int j=0; j< combination.size();j++){
+					Variable v = combination.get(j);
+					if(ivc1.getDstVar().equals(v.getName())){
+						ivc1.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc2.getDstVar().equals(v.getName())){
+						ivc2.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc3.getDstVar().equals(v.getName())){
+						ivc3.addValue(Integer.valueOf(v.getValue()));
+					}
+				}
+			}
+			System.out.println(ivc1);
+			System.out.println(ivc2);
+			System.out.println(ivc3);
+			
+			insert(ivc1);
+			insert(ivc2);
+			insert(ivc3);	
 		}
+		
 end
 
 
@@ -179,7 +224,7 @@ rule "ThreeVarsInTwoClues02"
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v3: dstVar , relationship == "=",  $v1== srcVar, $op02: operator)
-		$assignments: HashMap(size==1)
+		$assignments: HashMap(size>=1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(
@@ -218,17 +263,48 @@ rule "ThreeVarsInTwoClues02"
 		System.out.println("3Vars2Clues02 ==>>");
 		System.out.println(c1);
 		System.out.println(c2);
-		System.out.println($assignments);
-		String key= (String)$assignments.keySet().iterator().next();
-		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
-		for(int i=0; i<vars.size(); i++){
-			Variable v= vars.get(i);
-			SingleClue sc= new SingleClue();
-			sc.setDstVar(v.getName());
-			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
-			sc.setValue(v.getValue());
-			insert(sc);
+		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
+		System.out.println(combinations);
+		if(combinations.size()==1){
+			ArrayList<Variable> vars= (ArrayList<Variable>)combinations.get(0);
+			for(int i=0; i<vars.size(); i++){
+				Variable v= vars.get(i);
+				SingleClue sc= new SingleClue();
+				sc.setDstVar(v.getName());
+				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+				sc.setValue(v.getValue());
+				insert(sc);
+			}
+		}else{
+			InValuesClue ivc1= new InValuesClue();
+			ivc1.setDstVar($v1);
+			InValuesClue ivc2= new InValuesClue();
+			ivc2.setDstVar($v2);
+			InValuesClue ivc3= new InValuesClue();
+			ivc3.setDstVar($v3);
+			
+			for(int i=0; i<combinations.size() ;i++){
+				ArrayList<Variable> combination = combinations.get(i);
+				for(int j=0; j< combination.size();j++){
+					Variable v = combination.get(j);
+					if(ivc1.getDstVar().equals(v.getName())){
+						ivc1.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc2.getDstVar().equals(v.getName())){
+						ivc2.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc3.getDstVar().equals(v.getName())){
+						ivc3.addValue(Integer.valueOf(v.getValue()));
+					}
+				}
+			}
+			System.out.println(ivc1);
+			System.out.println(ivc2);
+			System.out.println(ivc3);
+			
+			insert(ivc1);
+			insert(ivc2);
+			insert(ivc3);	
 		}
+		
 end
 
 
@@ -237,7 +313,7 @@ rule "ThreeVarsInTwoClues03"
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v2== dstVar, relationship == "=", $v3: srcVar , $op02: operator)
-		$assignments: HashMap(size==1)
+		$assignments: HashMap(size>=1)
 		    from accumulate(v1: Variable(name == $v1) and v2: Variable(name==$v2) and v3: Variable(name==$v3),
 		        init( HashMap h = new HashMap();),
 		        action(
@@ -276,16 +352,46 @@ rule "ThreeVarsInTwoClues03"
 		System.out.println("3Vars2Clues03 ==>>");
 		System.out.println(c1);
 		System.out.println(c2);
-		System.out.println($assignments);
-		String key= (String)$assignments.keySet().iterator().next();
-		ArrayList<Variable> vars= (ArrayList<Variable>)$assignments.get(key);
-		for(int i=0; i<vars.size(); i++){
-			Variable v= vars.get(i);
-			SingleClue sc= new SingleClue();
-			sc.setDstVar(v.getName());
-			sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
-			sc.setValue(v.getValue());
-			insert(sc);
+		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
+		System.out.println(combinations);
+		if(combinations.size()==1){
+			ArrayList<Variable> vars= (ArrayList<Variable>)combinations.get(0);
+			for(int i=0; i<vars.size(); i++){
+				Variable v= vars.get(i);
+				SingleClue sc= new SingleClue();
+				sc.setDstVar(v.getName());
+				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+				sc.setValue(v.getValue());
+				insert(sc);
+			}
+		}else{
+			InValuesClue ivc1= new InValuesClue();
+			ivc1.setDstVar($v1);
+			InValuesClue ivc2= new InValuesClue();
+			ivc2.setDstVar($v2);
+			InValuesClue ivc3= new InValuesClue();
+			ivc3.setDstVar($v3);
+			
+			for(int i=0; i<combinations.size() ;i++){
+				ArrayList<Variable> combination = combinations.get(i);
+				for(int j=0; j< combination.size();j++){
+					Variable v = combination.get(j);
+					if(ivc1.getDstVar().equals(v.getName())){
+						ivc1.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc2.getDstVar().equals(v.getName())){
+						ivc2.addValue(Integer.valueOf(v.getValue()));
+					}else if(ivc3.getDstVar().equals(v.getName())){
+						ivc3.addValue(Integer.valueOf(v.getValue()));
+					}
+				}
+			}
+			System.out.println(ivc1);
+			System.out.println(ivc2);
+			System.out.println(ivc3);
+			
+			insert(ivc1);
+			insert(ivc2);
+			insert(ivc3);	
 		}
 end
 

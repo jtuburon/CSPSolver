@@ -25,44 +25,21 @@ public class MainCSPSolver
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<Clue>();
 		this.initCSP01();
+		//this.initCSP02();
 		//this.initCSPTest();
 	}
 	
 	private void initCSP01(){
-		SingleClue c1= new SingleClue();
-		c1.setDstVar("A1");
-		c1.setRelationship(">");
-		c1.setValue(6);
-		clues.add(c1);
-		
-		TwoVarsRelationshipClue tvc= new TwoVarsRelationshipClue();
-		tvc.setDstVar("A3");
-		tvc.setRelationship("=");
-		tvc.setSrcVar("A2");
-		tvc.setOperator("+");
-		tvc.setValue(1);
-		clues.add(tvc);
-		
-		SingleClue c= new SingleClue();
-		c.setDstVar("B2");
-		c.setRelationship("=");
-		c.setValue(6);
+		Clue c= InputPattern.parseStringToClue("A1>6");
 		clues.add(c);
-		
-		tvc= new TwoVarsRelationshipClue();
-		tvc.setDstVar("B1");
-		tvc.setRelationship("=");
-		tvc.setSrcVar("A4");
-		tvc.setOperator("+");
-		tvc.setValue(1);
-		clues.add(tvc);
-		
-		c= new SingleClue();
-		c.setDstVar("B3");
-		c.setRelationship("=");
-		c.setValue(5);
+		c= InputPattern.parseStringToClue("A3=A2+1");
 		clues.add(c);
-		
+		c= InputPattern.parseStringToClue("B2=6");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B1=A4+1");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B3=5");
+		clues.add(c);
 	}
 	
 	private void initCSP02(){
