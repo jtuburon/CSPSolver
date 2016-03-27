@@ -24,8 +24,8 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<Clue>();
-		this.initCSP01();
-		//this.initCSP02();
+		//this.initCSP01();
+		this.initCSP02();
 		//this.initCSPTest();
 	}
 	
@@ -43,13 +43,15 @@ public class MainCSPSolver
 	}
 	
 	private void initCSP02(){
-		Clue c= InputPattern.parseStringToClue("A2=A3+1000");
+		Clue c= InputPattern.parseStringToClue("A1=B1+0");
 		clues.add(c);
-		c= InputPattern.parseStringToClue("A2=B3+0");
+		c= InputPattern.parseStringToClue("A3=2 XOR B3=2");
 		clues.add(c);
-		c= InputPattern.parseStringToClue("A1=B2+1000");
+		c= InputPattern.parseStringToClue("A3>B2+0");
 		clues.add(c);
-		c= InputPattern.parseStringToClue("B4=9000 XOR B4=A3+0");
+		c= InputPattern.parseStringToClue("B4=3");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B3>A4+0");
 		clues.add(c);
 	}
 	

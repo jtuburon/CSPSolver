@@ -3,6 +3,7 @@ package com.uniandes.cspsolver
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
+import java.util.Iterator
 
 rule "Show Variables"
 	salience 1000
@@ -42,7 +43,7 @@ rule "DirectAssignmentPropagation"
 		retract($var);
 end
 
-rule "SingleDomainRestriction"
+rule "SingleDomainReduction"
 	salience 500
 	when
 		c: SingleClue(class==SingleClue, relationship != InputPattern.EQUIVALENCE_RELATIONSHIP, $v1: dstVar, value matches "\\d+")
@@ -74,7 +75,7 @@ rule "SingleDomainRestriction"
 		}
 end
 
-rule "InValuesClueDomainRestriction"
+rule "InValuesClueDomainReduction"
 	salience 500
 	when
 		c: InValuesClue()
@@ -88,46 +89,157 @@ end
 rule "Process TwoVarsMultiplesAssignmentClues"
 	salience 400
 	when
-		c: TwoVarsRelationshipClue($dv: dstVar, relationship == "=",  $sv: srcVar, $operator: operator)		
-		$assignments: HashMap(size==1)
+		//c: TwoVarsRelationshipClue($dv: dstVar, relationship == "=",  $sv: srcVar, $operator: operator)
+		c: TwoVarsRelationshipClue($dv: dstVar, $rel: relationship,  $sv: srcVar, $operator: operator)		
+		$assignments: HashMap(size>=1)
 		    from accumulate( dv: Variable(name== $dv) and sv: Variable(name== $sv),
 		        init( HashMap h = new HashMap();),
 		        action(
-		        	if($operator.equals("+")){
-			        	if(dv.getValue()== c.getValue() + sv.getValue())
-			            	h.put(dv, sv);
+		        	boolean sw=false;
+		        	if($rel.equals("=")){
+			        	if($operator.equals("+") && dv.getValue()== c.getValue() + sv.getValue())
+				        	sw=true;
+			        	if($operator.equals("-") && dv.getValue()== c.getValue() - sv.getValue())
+				        	sw=true;
+				        if($operator.equals("*") && dv.getValue()== c.getValue() * sv.getValue())
+				        	sw=true;
+				        if($operator.equals("/") && dv.getValue()== c.getValue() / sv.getValue())
+				        	sw=true;
+		        	}else if($rel.equals(">")){
+		        		if($operator.equals("+") && dv.getValue()> c.getValue() + sv.getValue())
+				        	sw=true;
+			        	if($operator.equals("-") && dv.getValue()> c.getValue() - sv.getValue())
+				        	sw=true;
+				        if($operator.equals("*") && dv.getValue()> c.getValue() * sv.getValue())
+				        	sw=true;
+				        if($operator.equals("/") && dv.getValue()> c.getValue() / sv.getValue())
+				        	sw=true;
+		        	}else if($rel.equals("<")){
+		        		if($operator.equals("+") && dv.getValue()< c.getValue() + sv.getValue())
+				        	sw=true;
+			        	if($operator.equals("-") && dv.getValue()< c.getValue() - sv.getValue())
+				        	sw=true;
+				        if($operator.equals("*") && dv.getValue()< c.getValue() * sv.getValue())
+				        	sw=true;
+				        if($operator.equals("/") && dv.getValue()< c.getValue() / sv.getValue())
+				        	sw=true;
+		        	}else if($rel.equals(">=")){
+		        		if($operator.equals("+") && dv.getValue()>= c.getValue() + sv.getValue())
+				        	sw=true;
+			        	if($operator.equals("-") && dv.getValue()>= c.getValue() - sv.getValue())
+				        	sw=true;
+				        if($operator.equals("*") && dv.getValue()>= c.getValue() * sv.getValue())
+				        	sw=true;
+				        if($operator.equals("/") && dv.getValue()>= c.getValue() / sv.getValue())
+				        	sw=true;
+		        	}else if($rel.equals("<=")){
+		        		if($operator.equals("+") && dv.getValue()<= c.getValue() + sv.getValue())
+				        	sw=true;
+			        	if($operator.equals("-") && dv.getValue()<= c.getValue() - sv.getValue())
+				        	sw=true;
+				        if($operator.equals("*") && dv.getValue()<= c.getValue() * sv.getValue())
+				        	sw=true;
+				        if($operator.equals("/") && dv.getValue()<= c.getValue() / sv.getValue())
+				        	sw=true;
 		        	}
-		        	if($operator.equals("-")){
-			        	if(dv.getValue()== c.getValue() - sv.getValue())
-			            	h.put(dv, sv);
-		        	}
-		        	if($operator.equals("*")){
-			        	if(dv.getValue()== c.getValue() * sv.getValue())
-			            	h.put(dv, sv);
-		        	}
-		        	if($operator.equals("/")){
-			        	if(dv.getValue()== c.getValue() / sv.getValue())
-			            	h.put(dv, sv);
+		        	if(sw){
+		        		if(h.get(dv)==null)
+		        			h.put(dv, new ArrayList<Variable>());
+		        		ArrayList<Variable> sources= (ArrayList<Variable>)h.get(dv);
+		        		sources.add(sv);
 		        	}
 		        ),
 		        result(h)
 		    );
 	then
-		System.out.println("TVRC ==>>");
-		Variable dest= (Variable)$assignments.keySet().iterator().next();
-		Variable source= (Variable)$assignments.get(dest);
+		System.out.println("TVRC ==>> ");
+		System.out.println(c);
+		if(!$rel.equals("=")&& c.getValue()==0 || ($rel.equals("=") && c.getValue()!=0)){
+			AllDiffClue clue= new AllDiffClue();
+			clue.addVariable($dv);
+			clue.addVariable($sv);
+			System.out.println(clue.toString()+ " added due to: "+c);
+			insert(clue);
+		}else if($rel.equals("=")&& c.getValue()==0){
+			AllDiffClue clue01= new AllDiffClue();
+			clue01.addVariable($dv);
+			String group01="";
+			switch($dv.charAt(0)){
+				case 'A':
+					group01="B";
+				break;
+				case 'B':
+					group01="A";
+				break;
+			};
+			for(int i=1;i<=4;i++){
+				if(!$sv.equals(group01+i))
+					clue01.addVariable(group01+i);
+			}   
+			insert(clue01);
+			
+			AllDiffClue clue02= new AllDiffClue();
+			clue02.addVariable($sv);
+			String group02="";
+			switch($sv.charAt(0)){
+				case 'A':
+					group02="B";
+				break;
+				case 'B':
+					group02="A";
+				break;
+			};
+			for(int i=1;i<=4;i++){
+				if(!$dv.equals(group02+i))
+					clue02.addVariable(group02+i);
+			}   
+			insert(clue02);
+		}
+		if($assignments.size()==1){
+			Variable dest= (Variable)$assignments.keySet().iterator().next();
+			SingleClue sc1= new SingleClue();
+			sc1.setDstVar(dest.getName());
+			sc1.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+			sc1.setValue(dest.getValue());
+			insert(sc1);
+			
+			ArrayList<Variable> sources= (ArrayList<Variable>)$assignments.get(dest);
+			if(sources.size()==1){
+				SingleClue sc2= new SingleClue();
+				sc2.setDstVar(sources.get(0).getName());
+				sc2.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+				sc2.setValue(sources.get(0).getValue());
+				insert(sc2);
+			}else if(sources.size()>1){
+				InValuesClue ivc= new InValuesClue();
+				for (int i=0;i< sources.size();i++){
+					Variable v= sources.get(i);
+					ivc.setDstVar(v.getName());
+					ivc.addValue(Integer.valueOf(v.getValue()));
+				}
+				insert(ivc);
+			}
+		}else{
+			InValuesClue ivc1= new InValuesClue();
+			ivc1.setDstVar($dv);
+			InValuesClue ivc2= new InValuesClue();
+			ivc2.setDstVar($sv);
+			Iterator iterator= $assignments.keySet().iterator();
+			while (iterator.hasNext()){
+			 	Variable d= (Variable)iterator.next();
+			 	ivc1.addValue(Integer.valueOf(d.getValue()));
+			 	
+			 	ArrayList<Variable> sources= (ArrayList<Variable>)$assignments.get(d);
+			 	for (int i=0;i< sources.size();i++){
+					Variable v= sources.get(i);
+					ivc2.addValue(Integer.valueOf(v.getValue()));
+				}
+			 	
+			}
+			insert(ivc1);
+			insert(ivc2);
+		}
 		
-		SingleClue sc1= new SingleClue();
-		sc1.setDstVar(dest.getName());
-		sc1.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
-		sc1.setValue(dest.getValue());
-		insert(sc1);
-		
-		SingleClue sc2= new SingleClue();
-		sc2.setDstVar(source.getName());
-		sc2.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
-		sc2.setValue(source.getValue());
-		insert(sc2);
 end
 
 rule "ThreeVarsInTwoClues01"
@@ -395,7 +507,49 @@ rule "ThreeVarsInTwoClues03"
 		}
 end
 
-
+rule "XORClueRule"
+	salience 400
+	when
+		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
+	then
+		AllDiffClue clue= new AllDiffClue();
+		clue.addVariable(v1);
+		clue.addVariable(v2);
+		System.out.println(clue.toString()+ " added due to: "+c);
+		insert(clue);
+end
+/*
+rule "1VarDiff3VarsInADiffGroup"
+	when
+		
+		v: Variable($vname: name)
+		v1: Variable(v.getGroup()!=group, $group: group)
+		c1: AllDiffClue(variables contains $vname, variables contains v1.getName())
+		v2: Variable(name!=v1.name, $group==group)
+		c2: AllDiffClue(variables contains $vname, variables contains v2.getName())
+		v3: Variable(name!=v1.name, name!=v2.name, $group==group)
+		c3: AllDiffClue(variables contains $vname, variables contains v3.getName())
+		
+	then
+		System.out.println("1VarDiff3VarsInADiffGroup");
+		System.out.println(c1);
+		System.out.println(c2);
+		System.out.println(c3);
+end
+*/
+rule "1VarDiff3VarsInADiffGroup"
+	when
+		v: String() from ["A1","A2","A3","A4"]
+		v1: String() from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v1)
+		v2: String(this!=v1) from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v2)
+		v3: String(this!=v1, this!=v2) from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v3)
+	then
+		System.out.println("1VarDiff3VarsInADiffGroup");
+		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+end
 
 rule "Show Solution"
 	salience 1000

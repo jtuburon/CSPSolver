@@ -153,7 +153,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         
                 jLabel1.setText("Domain");
         d1TF = new javax.swing.JTextField();
-        d1TF.setText("{4,5,6,7}");
+        d1TF.setText("{1,2,3,4}");
         
                 d1TF.addActionListener(new java.awt.event.ActionListener() {
                     public void actionPerformed(java.awt.event.ActionEvent evt) {
