@@ -41,7 +41,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	setResizable(false);
     	initComponents();
     	solver= new MainCSPSolver();
-    	initCSP04();
+    	initCSP05();
         updateCluesList();
     }
     
@@ -100,6 +100,24 @@ public class InputCSPJFrame extends javax.swing.JFrame {
 		c= InputPattern.parseStringToClue("B1=A4+130");
 		solver.addClue(c);
 	}
+	
+	private void initCSP05(){
+		d1TF.setText("{1,2,3,4}");
+		Clue c= InputPattern.parseStringToClue("ALLDIFF(A1,B2)");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B2=A3+2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A4=B4+0");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A1>2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B2>2");
+		solver.addClue(c);
+	}
+	
+	
     
     public void addClue(SingleClue c){
         solver.addClue(c);

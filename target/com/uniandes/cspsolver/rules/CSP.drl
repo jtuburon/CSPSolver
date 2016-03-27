@@ -620,3 +620,33 @@ rule "XORClueRule02"
 		System.out.println(c.getC1().toString() + " added due to: not("+ c.getC2().toString()+ ")");
 		insert(c.getC1());
 end
+
+
+rule "OnlyOneValueInAVarGroup"
+	salience 400
+	when
+		g: String() from ["A","B"]
+		$values: HashMap(size>=1)
+		    from accumulate(v: Variable(group==g),
+		        init( HashMap h = new HashMap();),
+		        action(
+		        	Integer key= Integer.valueOf(v.getValue());
+		        	if(h.get(key)==null)
+		        		h.put(key, new ArrayList<Variable>());
+		        	ArrayList<Variable> vars=(ArrayList<Variable>)h.get(key);
+		        	vars.add(v);
+		        ),
+		        result(h)
+		    );
+		$varList: ArrayList(size==1) from $values.values()
+	then
+		System.out.println("OnlyOneValueInAVarGroup: ");
+		Variable v=(Variable)$varList.get(0);
+		System.out.println(v);
+		SingleClue sc= new SingleClue();
+		sc.setDstVar(v.getName());
+		sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+		sc.setValue(v.getValue());
+		System.out.println("Added: "+ sc.toString()+ " due to OnlyOneValueInAVarGroup: " + v.toString());
+		insert(sc);
+end
