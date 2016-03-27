@@ -24,59 +24,6 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<Clue>();
-		this.initCSP04();
-	}
-	
-	private void initCSP01(){
-		Clue c= InputPattern.parseStringToClue("A1>6");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A3=A2+1");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B2=6");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B1=A4+1");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B3=5");
-		clues.add(c);
-	}
-	
-	private void initCSP02(){
-		Clue c= InputPattern.parseStringToClue("A1=B1+0");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A3=2 XOR B3=2");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A3>B2+0");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B4=3");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B3>A4+0");
-		clues.add(c);
-	}
-	
-	private void initCSP03(){
-		Clue c= InputPattern.parseStringToClue("A1=3");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B3=6");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B1=3 XOR A2=3");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B2=A4+1");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A2=B4+2");
-		clues.add(c);
-	}
-	
-	private void initCSP04(){
-		Clue c= InputPattern.parseStringToClue("A2<B4+0");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B3<A3+0");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A1=440 XOR B4=440");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("A1=570");
-		clues.add(c);
-		c= InputPattern.parseStringToClue("B1=A4+130");
-		clues.add(c);
 	}
 	
 	public List<Clue> getClues() {

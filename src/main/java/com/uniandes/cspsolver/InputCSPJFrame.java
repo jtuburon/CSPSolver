@@ -39,10 +39,67 @@ public class InputCSPJFrame extends javax.swing.JFrame {
      */
     public InputCSPJFrame() {
     	setResizable(false);
+    	initComponents();
     	solver= new MainCSPSolver();
-        initComponents();
+    	initCSP04();
         updateCluesList();
     }
+    
+    private void initCSP01(){
+    	d1TF.setText("{4,5,6,7}");
+		Clue c= InputPattern.parseStringToClue("A1>6");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A3=A2+1");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B2=6");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=A4+1");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B3=5");
+		solver.addClue(c);
+	}
+	
+	private void initCSP02(){
+		d1TF.setText("{1,2,3,4}");
+		Clue c= InputPattern.parseStringToClue("A1=B1+0");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A3=2 XOR B3=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A3>B2+0");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B4=3");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B3>A4+0");
+		solver.addClue(c);
+	}
+	
+	private void initCSP03(){
+		d1TF.setText("{3,4,5,6}");
+		Clue c= InputPattern.parseStringToClue("A1=3");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B3=6");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=3 XOR A2=3");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B2=A4+1");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A2=B4+2");
+		solver.addClue(c);
+	}
+	
+	private void initCSP04(){
+		d1TF.setText("{375,440,505,570}");
+		Clue c= InputPattern.parseStringToClue("A2<B4+0");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B3<A3+0");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A1=440 XOR B4=440");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A1=570");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=A4+130");
+		solver.addClue(c);
+	}
     
     public void addClue(SingleClue c){
         solver.addClue(c);
