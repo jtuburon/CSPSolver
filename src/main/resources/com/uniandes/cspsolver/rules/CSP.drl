@@ -86,8 +86,8 @@ rule "InValuesClueDomainReduction"
 		retract(v);
 end
 
-rule "Process TwoVarsMultiplesAssignmentClues"
-	salience 400
+rule "Process TwoVarsRelationshipClue"
+	salience 450
 	when
 		//c: TwoVarsRelationshipClue($dv: dstVar, relationship == "=",  $sv: srcVar, $operator: operator)
 		c: TwoVarsRelationshipClue($dv: dstVar, $rel: relationship,  $sv: srcVar, $operator: operator)		
@@ -217,7 +217,8 @@ rule "Process TwoVarsMultiplesAssignmentClues"
 					ivc.setDstVar(v.getName());
 					ivc.addValue(Integer.valueOf(v.getValue()));
 				}
-				insert(ivc);
+				if(ivc.getValues().size()>0)
+					insert(ivc);
 			}
 		}else{
 			InValuesClue ivc1= new InValuesClue();
@@ -236,14 +237,90 @@ rule "Process TwoVarsMultiplesAssignmentClues"
 				}
 			 	
 			}
-			insert(ivc1);
-			insert(ivc2);
+			if(ivc1.getValues().size()>0)
+				insert(ivc1);
+			if(ivc2.getValues().size()>0)
+				insert(ivc2);
 		}
 		
 end
 
-rule "ThreeVarsInTwoClues01"
+
+rule "1VarDiff3VarsInADiffGroup01"
+	no-loop true
+	salience 450
+	when
+		v: String() from ["A1","A2","A3","A4"]
+		v1: String() from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v1)
+		v2: String(this!=v1) from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v2)
+		v3: String(this!=v1, this!=v2) from ["B1","B2","B3","B4"]
+		exists AllDiffClue(variables contains v, variables contains v3)
+		v4: String(this!=v1, this!=v2, this!=v3) from ["B1","B2","B3","B4"]
+	then
+		System.out.println("1VarDiff3VarsInADiffGroup");
+		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
+		clue.setDstVar(v);
+		clue.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+		clue.setSrcVar(v4);
+		clue.setOperator("+");
+		clue.setValue(0);
+		insert(clue);
+end
+
+rule "1VarDiff3VarsInADiffGroup02"
+	no-loop true
+	salience 450
+	when
+		v: String() from ["B1","B2","B3","B4"]
+		v1: String() from ["A1","A2","A3","A4"]
+		exists AllDiffClue(variables contains v, variables contains v1)
+		v2: String(this!=v1) from ["A1","A2","A3","A4"]
+		exists AllDiffClue(variables contains v, variables contains v2)
+		v3: String(this!=v1, this!=v2) from ["A1","A2","A3","A4"]
+		exists AllDiffClue(variables contains v, variables contains v3)
+		v4: String(this!=v1, this!=v2, this!=v3) from ["A1","A2","A3","A4"]
+	then
+		System.out.println("1VarDiff3VarsInADiffGroup02");
+		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
+		clue.setDstVar(v);
+		clue.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
+		clue.setSrcVar(v4);
+		clue.setOperator("+");
+		clue.setValue(0);
+		insert(clue);
+end
+
+rule "Show Solution"
+	salience 1000
+	when
+		array: ArrayList(size == 8)
+        	from collect(Variable())
+	then
+		System.out.println("Solution Found");
+		System.out.println(array);
+		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + array, "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+end
+
+rule "Show Partial-Solution"
+	salience 0
+	when
+		array: ArrayList(size > 8)
+        	from collect(Variable())
+	then
+		System.out.println("Partial Solution");
+		System.out.println(array);
+end
+
+
+
+
+rule "3Vars2Clues01"
 	salience 400
+	no-loop true
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue($v3: dstVar , relationship == "=",  $v2== srcVar, $op02: operator)
@@ -298,7 +375,7 @@ rule "ThreeVarsInTwoClues01"
 				sc.setValue(v.getValue());
 				insert(sc);
 			}
-		}else{
+		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
 			ivc1.setDstVar($v1);
 			InValuesClue ivc2= new InValuesClue();
@@ -319,20 +396,20 @@ rule "ThreeVarsInTwoClues01"
 					}
 				}
 			}
-			System.out.println(ivc1);
-			System.out.println(ivc2);
-			System.out.println(ivc3);
-			
-			insert(ivc1);
-			insert(ivc2);
-			insert(ivc3);	
+			if(ivc1.getValues().size()>0)
+				insert(ivc1);
+			if(ivc2.getValues().size()>0)
+				insert(ivc2);
+			if(ivc3.getValues().size()>0)
+				insert(ivc3);	
 		}
 		
 end
 
 
-rule "ThreeVarsInTwoClues02"
+rule "3Vars2Clues02"
 	salience 400
+	no-loop true
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v3: dstVar , relationship == "=",  $v1== srcVar, $op02: operator)
@@ -387,7 +464,7 @@ rule "ThreeVarsInTwoClues02"
 				sc.setValue(v.getValue());
 				insert(sc);
 			}
-		}else{
+		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
 			ivc1.setDstVar($v1);
 			InValuesClue ivc2= new InValuesClue();
@@ -408,20 +485,22 @@ rule "ThreeVarsInTwoClues02"
 					}
 				}
 			}
-			System.out.println(ivc1);
-			System.out.println(ivc2);
-			System.out.println(ivc3);
 			
-			insert(ivc1);
-			insert(ivc2);
-			insert(ivc3);	
+			if(ivc1.getValues().size()>0)
+				insert(ivc1);
+			if(ivc2.getValues().size()>0)
+				insert(ivc2);
+			if(ivc3.getValues().size()>0)
+				insert(ivc3);
+				
 		}
 		
 end
 
 
-rule "ThreeVarsInTwoClues03"
+rule "3Vars2Clues03"
 	salience 400
+	no-loop true
 	when
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v2== dstVar, relationship == "=", $v3: srcVar , $op02: operator)
@@ -476,7 +555,7 @@ rule "ThreeVarsInTwoClues03"
 				sc.setValue(v.getValue());
 				insert(sc);
 			}
-		}else{
+		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
 			ivc1.setDstVar($v1);
 			InValuesClue ivc2= new InValuesClue();
@@ -497,15 +576,16 @@ rule "ThreeVarsInTwoClues03"
 					}
 				}
 			}
-			System.out.println(ivc1);
-			System.out.println(ivc2);
-			System.out.println(ivc3);
 			
-			insert(ivc1);
-			insert(ivc2);
-			insert(ivc3);	
+			if(ivc1.getValues().size()>0)
+				insert(ivc1);
+			if(ivc2.getValues().size()>0)
+				insert(ivc2);
+			if(ivc3.getValues().size()>0)
+				insert(ivc3);	
 		}
 end
+
 
 rule "XORClueRule"
 	salience 400
@@ -518,46 +598,25 @@ rule "XORClueRule"
 		System.out.println(clue.toString()+ " added due to: "+c);
 		insert(clue);
 end
-/*
-rule "1VarDiff3VarsInADiffGroup"
+
+rule "XORClueRule01"
+	salience 400
 	when
-		
-		v: Variable($vname: name)
-		v1: Variable(v.getGroup()!=group, $group: group)
-		c1: AllDiffClue(variables contains $vname, variables contains v1.getName())
-		v2: Variable(name!=v1.name, $group==group)
-		c2: AllDiffClue(variables contains $vname, variables contains v2.getName())
-		v3: Variable(name!=v1.name, name!=v2.name, $group==group)
-		c3: AllDiffClue(variables contains $vname, variables contains v3.getName())
-		
+		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
+		not Variable(name== c.getC1().getDstVar(), value==c.getC1().getValue())
 	then
-		System.out.println("1VarDiff3VarsInADiffGroup");
-		System.out.println(c1);
-		System.out.println(c2);
-		System.out.println(c3);
-end
-*/
-rule "1VarDiff3VarsInADiffGroup"
-	when
-		v: String() from ["A1","A2","A3","A4"]
-		v1: String() from ["B1","B2","B3","B4"]
-		exists AllDiffClue(variables contains v, variables contains v1)
-		v2: String(this!=v1) from ["B1","B2","B3","B4"]
-		exists AllDiffClue(variables contains v, variables contains v2)
-		v3: String(this!=v1, this!=v2) from ["B1","B2","B3","B4"]
-		exists AllDiffClue(variables contains v, variables contains v3)
-	then
-		System.out.println("1VarDiff3VarsInADiffGroup");
-		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+		System.out.println("XORClueRule01: "+c);
+		System.out.println(c.getC2().toString() + " added due to: not("+ c.getC1().toString()+ ")");
+		insert(c.getC2());
 end
 
-rule "Show Solution"
-	salience 1000
+rule "XORClueRule02"
+	salience 400
 	when
-		array: ArrayList(size == 8)
-        	from collect(Variable())
+		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
+		not Variable(name== c.getC2().getDstVar(), value==c.getC2().getValue())
 	then
-		System.out.println("Solution Found");
-		System.out.println(array);
-		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + array, "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+		System.out.println("XORClueRule01: "+c);
+		System.out.println(c.getC1().toString() + " added due to: not("+ c.getC2().toString()+ ")");
+		insert(c.getC1());
 end

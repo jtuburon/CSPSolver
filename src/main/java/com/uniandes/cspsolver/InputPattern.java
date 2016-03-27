@@ -1,5 +1,7 @@
 package com.uniandes.cspsolver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +47,9 @@ public class InputPattern {
 	
 	public final static String XOR_PATTERN = P1_PATTERN+"\\s*" +XOR_OPERATOR + "\\s*"+P2_PATTERN;
 	
+	public final static String MANY_VARS="(?<vars>\\s*((A|B)[1-4])(\\s*,\\s*(A|B)[1-4])+\\s*)"; 
+	public final static String ALLDIFF_PATTERN = "\\s*ALLDIFF\\(" + MANY_VARS+ "\\)\\s*";
+	
 	public static boolean validateDomainInput(String domainAsString){
 		return Pattern.matches(DOMAIN_PATTERN, domainAsString);
 	}
@@ -76,7 +81,6 @@ public class InputPattern {
 				clue.setOperator(m.group("operator"));
 				clue.setValue(Integer.parseInt(m.group("value")));
 				c=clue;
-				System.out.println(clue);
 			}
 		}else if(clueAsString.matches(InputPattern.XOR_PATTERN)){
 			Pattern p = Pattern.compile(InputPattern.XOR_PATTERN);
@@ -89,7 +93,18 @@ public class InputPattern {
 				clue.setC1(c1);
 				clue.setC2(c2);
 				c=clue;
-				System.out.println(clue);
+			}
+		}else if(clueAsString.matches(InputPattern.ALLDIFF_PATTERN)){
+			Pattern p = Pattern.compile(InputPattern.ALLDIFF_PATTERN);
+			Matcher m= p.matcher(clueAsString);
+			if(m.find()){
+				AllDiffClue clue= new AllDiffClue();
+				String varsAsString = m.group("vars");
+				varsAsString= varsAsString.replaceAll("\\s+", "");
+				clue.setVariables(new ArrayList<String>(Arrays.asList(varsAsString.split(","))));
+				if(clue.getVariables().size()>=2){
+					c=clue;
+				}
 			}
 		}else{
 			System.out.println("No wapeo al patron");

@@ -24,9 +24,7 @@ public class MainCSPSolver
 		kSession = kContainer.newKieSession("ksession-rules");
 		variables = new ArrayList<Variable>();
 		clues = new ArrayList<Clue>();
-		//this.initCSP01();
-		this.initCSP02();
-		//this.initCSPTest();
+		this.initCSP04();
 	}
 	
 	private void initCSP01(){
@@ -55,11 +53,29 @@ public class MainCSPSolver
 		clues.add(c);
 	}
 	
-	private void initCSPTest(){
-		SingleClue c= new SingleClue();
-		c.setDstVar("A1");
-		c.setRelationship("<=");
-		c.setValue(2);
+	private void initCSP03(){
+		Clue c= InputPattern.parseStringToClue("A1=3");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B3=6");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B1=3 XOR A2=3");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B2=A4+1");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("A2=B4+2");
+		clues.add(c);
+	}
+	
+	private void initCSP04(){
+		Clue c= InputPattern.parseStringToClue("A2<B4+0");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B3<A3+0");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("A1=440 XOR B4=440");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("A1=570");
+		clues.add(c);
+		c= InputPattern.parseStringToClue("B1=A4+130");
 		clues.add(c);
 	}
 	
