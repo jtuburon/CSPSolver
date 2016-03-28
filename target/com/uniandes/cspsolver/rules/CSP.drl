@@ -78,10 +78,21 @@ end
 rule "InValuesClueDomainReduction"
 	salience 500
 	when
-		c: InValuesClue()
+		c: InValuesClue(notIn==false)
 		v: Variable(name==c.dstVar, c.getValues() not contains value)
 	then	
 		System.out.println("InValuesClueDomainRestriction::");
+		System.out.println(v +" removed due to " + c);
+		retract(v);
+end
+
+rule "NotInValuesClueDomainReduction"
+	salience 500
+	when
+		c: InValuesClue(notIn==true)
+		v: Variable(name==c.dstVar, c.getValues() contains value)
+	then	
+		System.out.println("NotInValuesClueDomainRestriction::");
 		System.out.println(v +" removed due to " + c);
 		retract(v);
 end

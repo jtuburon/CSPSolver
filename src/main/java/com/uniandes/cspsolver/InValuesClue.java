@@ -7,12 +7,20 @@ import java.util.List;
 
 public class InValuesClue extends Clue{
 	private String dstVar;
+	private boolean notIn=false;
 	
 	private ArrayList<Integer> values;
 	
 	public InValuesClue() {
-		// TODO Auto-generated constructor stub
+		notIn=false;
 		values = new ArrayList<>();
+	}
+	public boolean isNotIn() {
+		return notIn;
+	}
+	
+	public void setNotIn(boolean notIn) {
+		this.notIn = notIn;
 	}
 	
 	public String getDstVar() {
@@ -38,7 +46,12 @@ public class InValuesClue extends Clue{
 	
 	@Override
 	public String toString() {
-		return dstVar+" IN " + values.toString();
+		if(notIn){
+			return dstVar+" NOT_IN " + values.toString();
+		}else{
+			return dstVar+" IN " + values.toString();
+		}
+		
 	}
 	
 }

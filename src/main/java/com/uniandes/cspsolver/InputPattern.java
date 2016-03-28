@@ -50,6 +50,9 @@ public class InputPattern {
 	public final static String MANY_VARS="(?<vars>\\s*((A|B)[1-4])(\\s*,\\s*(A|B)[1-4])+\\s*)"; 
 	public final static String ALLDIFF_PATTERN = "\\s*ALLDIFF\\(" + MANY_VARS+ "\\)\\s*";
 	
+	public final static String MULTIPLE_VALUES_PATTERN="\\s*(?<values>\\d+(\\s*,\\s*\\d+)*)\\s*";
+	public final static String IN_VALUES_PATTERN=WHITESPACES_PATTERN + VARIABLE_PATTERN+"\\s+(?<relationship>IN|NOT_IN)\\s*" +"\\("+ MULTIPLE_VALUES_PATTERN +"\\)" +WHITESPACES_PATTERN;
+	
 	public static boolean validateDomainInput(String domainAsString){
 		return Pattern.matches(DOMAIN_PATTERN, domainAsString);
 	}
@@ -110,6 +113,23 @@ public class InputPattern {
 				if(clue.getVariables().size()>=2){
 					c=clue;
 				}
+			}
+		}else if(clueAsString.matches(InputPattern.IN_VALUES_PATTERN)){
+			Pattern p = Pattern.compile(InputPattern.IN_VALUES_PATTERN);
+			Matcher m= p.matcher(clueAsString);
+			if(m.find()){
+				InValuesClue clue= new InValuesClue();
+				clue.setDstVar(m.group("variable"));
+				clue.setNotIn(m.group("relationship").equals("NOT_IN"));
+				ArrayList<Integer> values= new ArrayList<>();
+				String valuesAsString= m.group("values");
+				valuesAsString=valuesAsString.trim();
+				String array[]= valuesAsString.split(",");
+				for (int i = 0; i < array.length; i++) {
+					values.add(Integer.valueOf(array[i]));
+				}
+				clue.setValues(values);
+				c=clue;
 			}
 		}else{
 			System.out.println("No wapeo al patron");

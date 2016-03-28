@@ -42,7 +42,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	initComponents();
     	solver= new MainCSPSolver();
     	initCSP05();
-        updateCluesList();
+    	updateCluesList();
     }
     
     private void initCSP01(){
@@ -111,13 +111,11 @@ public class InputCSPJFrame extends javax.swing.JFrame {
 		solver.addClue(c);
 		c= InputPattern.parseStringToClue("A4=B4+0");
 		solver.addClue(c);
-		c= InputPattern.parseStringToClue("A1>2");
+		c= InputPattern.parseStringToClue("A1 NOT_IN(1,2)");
 		solver.addClue(c);
-		c= InputPattern.parseStringToClue("B2>2");
+		c= InputPattern.parseStringToClue("B2 NOT_IN(1,2)");
 		solver.addClue(c);
 	}
-	
-	
     
     public void addClue(SingleClue c){
         solver.addClue(c);
