@@ -35,7 +35,7 @@ public class InputPattern {
 	
 	public final static String SRC_VARIABLE_PATTERN="(?<srcvariable>(A|B)[1-4])";
 	
-	public final static String ARITHMETIC_OPERATOR_PATTERN="(?<operator>[+|-|\\*|/])";
+	public final static String ARITHMETIC_OPERATOR_PATTERN="(?<operator>[+|\\-|\\*|/])";
 	
 	public final static String SINGLE_RELATIONSHIP_PATTERN =VARIABLE_PATTERN + WHITESPACES_PATTERN + RELATIONSHIP_PATTERN + WHITESPACES_PATTERN + VALUE_PATTERN;
 	
