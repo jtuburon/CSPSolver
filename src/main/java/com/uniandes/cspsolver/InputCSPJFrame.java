@@ -41,7 +41,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	setResizable(false);
     	initComponents();
     	solver= new MainCSPSolver();
-    	initCSP05();
+    	initCSP07();
     	updateCluesList();
     }
     
@@ -114,6 +114,38 @@ public class InputCSPJFrame extends javax.swing.JFrame {
 		c= InputPattern.parseStringToClue("A1 NOT_IN(1,2)");
 		solver.addClue(c);
 		c= InputPattern.parseStringToClue("B2 NOT_IN(1,2)");
+		solver.addClue(c);
+	}
+	
+	private void initCSP06(){
+		d1TF.setText("{1,2,3,4}");
+		Clue c= InputPattern.parseStringToClue("B3<B4");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A2=B1+2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A1=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A3=1");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B2=A4+1");
+		solver.addClue(c);
+	}
+	
+	private void initCSP07(){
+		d1TF.setText("{1,2,3,4}");
+		Clue c= InputPattern.parseStringToClue("B3<B4");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=A2-2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("B1=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A1=2");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A3=1");
+		solver.addClue(c);
+		c= InputPattern.parseStringToClue("A4=B2-1");
 		solver.addClue(c);
 	}
     

@@ -108,49 +108,49 @@ rule "Process TwoVarsRelationshipClue"
 		        action(
 		        	boolean sw=false;
 		        	if($rel.equals("=")){
-			        	if($operator.equals("+") && dv.getValue()== c.getValue() + sv.getValue())
+			        	if($operator.equals("+") && dv.getValue()== sv.getValue() + c.getValue())
 				        	sw=true;
-			        	if($operator.equals("-") && dv.getValue()== c.getValue() - sv.getValue())
+			        	if($operator.equals("-") && dv.getValue()== sv.getValue() - c.getValue())
 				        	sw=true;
-				        if($operator.equals("*") && dv.getValue()== c.getValue() * sv.getValue())
+				        if($operator.equals("*") && dv.getValue()== sv.getValue() * c.getValue())
 				        	sw=true;
-				        if($operator.equals("/") && dv.getValue()== c.getValue() / sv.getValue())
+				        if($operator.equals("/") && dv.getValue()== sv.getValue() / c.getValue())
 				        	sw=true;
 		        	}else if($rel.equals(">")){
-		        		if($operator.equals("+") && dv.getValue()> c.getValue() + sv.getValue())
+		        		if($operator.equals("+") && dv.getValue()> sv.getValue() + c.getValue())
 				        	sw=true;
-			        	if($operator.equals("-") && dv.getValue()> c.getValue() - sv.getValue())
+			        	if($operator.equals("-") && dv.getValue()> sv.getValue() - c.getValue())
 				        	sw=true;
-				        if($operator.equals("*") && dv.getValue()> c.getValue() * sv.getValue())
+				        if($operator.equals("*") && dv.getValue()> sv.getValue() * c.getValue())
 				        	sw=true;
-				        if($operator.equals("/") && dv.getValue()> c.getValue() / sv.getValue())
+				        if($operator.equals("/") && dv.getValue()> sv.getValue() * c.getValue())
 				        	sw=true;
 		        	}else if($rel.equals("<")){
-		        		if($operator.equals("+") && dv.getValue()< c.getValue() + sv.getValue())
+		        		if($operator.equals("+") && dv.getValue()< sv.getValue() + c.getValue())
 				        	sw=true;
-			        	if($operator.equals("-") && dv.getValue()< c.getValue() - sv.getValue())
+			        	if($operator.equals("-") && dv.getValue()< sv.getValue() - c.getValue())
 				        	sw=true;
-				        if($operator.equals("*") && dv.getValue()< c.getValue() * sv.getValue())
+				        if($operator.equals("*") && dv.getValue()< sv.getValue() * c.getValue())
 				        	sw=true;
-				        if($operator.equals("/") && dv.getValue()< c.getValue() / sv.getValue())
+				        if($operator.equals("/") && dv.getValue()< sv.getValue() / c.getValue())
 				        	sw=true;
 		        	}else if($rel.equals(">=")){
-		        		if($operator.equals("+") && dv.getValue()>= c.getValue() + sv.getValue())
+		        		if($operator.equals("+") && dv.getValue()>= sv.getValue() + sv.getValue())
 				        	sw=true;
-			        	if($operator.equals("-") && dv.getValue()>= c.getValue() - sv.getValue())
+			        	if($operator.equals("-") && dv.getValue()>= sv.getValue() - sv.getValue())
 				        	sw=true;
-				        if($operator.equals("*") && dv.getValue()>= c.getValue() * sv.getValue())
+				        if($operator.equals("*") && dv.getValue()>= sv.getValue() * sv.getValue())
 				        	sw=true;
-				        if($operator.equals("/") && dv.getValue()>= c.getValue() / sv.getValue())
+				        if($operator.equals("/") && dv.getValue()>= sv.getValue() / sv.getValue())
 				        	sw=true;
 		        	}else if($rel.equals("<=")){
-		        		if($operator.equals("+") && dv.getValue()<= c.getValue() + sv.getValue())
+		        		if($operator.equals("+") && dv.getValue()<= sv.getValue() + c.getValue())
 				        	sw=true;
-			        	if($operator.equals("-") && dv.getValue()<= c.getValue() - sv.getValue())
+			        	if($operator.equals("-") && dv.getValue()<= sv.getValue() - c.getValue())
 				        	sw=true;
-				        if($operator.equals("*") && dv.getValue()<= c.getValue() * sv.getValue())
+				        if($operator.equals("*") && dv.getValue()<= sv.getValue() * c.getValue())
 				        	sw=true;
-				        if($operator.equals("/") && dv.getValue()<= c.getValue() / sv.getValue())
+				        if($operator.equals("/") && dv.getValue()<= sv.getValue() / c.getValue())
 				        	sw=true;
 		        	}
 		        	if(sw){
