@@ -39,7 +39,7 @@ public class InputPattern {
 	
 	public final static String SINGLE_RELATIONSHIP_PATTERN =VARIABLE_PATTERN + WHITESPACES_PATTERN + RELATIONSHIP_PATTERN + WHITESPACES_PATTERN + VALUE_PATTERN;
 	
-	public final static String TWO_VARS_RELATIONSHIP_PATTERN =VARIABLE_PATTERN + WHITESPACES_PATTERN + RELATIONSHIP_PATTERN + WHITESPACES_PATTERN + SRC_VARIABLE_PATTERN + WHITESPACES_PATTERN + ARITHMETIC_OPERATOR_PATTERN +WHITESPACES_PATTERN + VALUE_PATTERN;
+	public final static String TWO_VARS_RELATIONSHIP_PATTERN =VARIABLE_PATTERN + WHITESPACES_PATTERN + RELATIONSHIP_PATTERN + WHITESPACES_PATTERN + SRC_VARIABLE_PATTERN + WHITESPACES_PATTERN + "("+ ARITHMETIC_OPERATOR_PATTERN +WHITESPACES_PATTERN + VALUE_PATTERN +")?";
 	
 	public final static String P1_PATTERN="(?<p1>(?<p1svvariable>(A|B)[1-4])\\s*(?<p1svrelation>(=|>|<|>=|<=))\\s*(?<p1svvalue>\\d+)|(?<p1tvvariable>(A|B)[1-4])\\s*(?<p1tvrelation>(=|>|<|>=|<=))\\s*(?<p1tvsrcvariable>(A|B)[1-4])\\s*(?<p1tvoperator>[+|-|\\*|/])\\s*(?<p1tvvalue>\\d+))";
 	
@@ -78,8 +78,13 @@ public class InputPattern {
 				clue.setDstVar(m.group("variable"));
 				clue.setRelationship(m.group("relation"));
 				clue.setSrcVar(m.group("srcvariable"));
-				clue.setOperator(m.group("operator"));
-				clue.setValue(Integer.parseInt(m.group("value")));
+				if(m.group("operator")==null){
+					clue.setOperator("+");
+					clue.setValue(0);
+				}else{
+					clue.setOperator(m.group("operator"));
+					clue.setValue(Integer.parseInt(m.group("value")));
+				}
 				c=clue;
 			}
 		}else if(clueAsString.matches(InputPattern.XOR_PATTERN)){

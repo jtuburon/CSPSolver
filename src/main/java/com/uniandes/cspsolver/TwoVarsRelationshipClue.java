@@ -27,6 +27,11 @@ public class TwoVarsRelationshipClue extends SingleClue {
 	
 	@Override
 	public String toString() {
-		return getDstVar() + getRelationship() + getSrcVar()+ getOperator()+ getValue();
+		if(getOperator().equals("+") && getValue()==0){
+			return getDstVar() + getRelationship() + getSrcVar();
+		}else{
+			return getDstVar() + getRelationship() + getSrcVar()+ getOperator()+ getValue();	
+		}
+		
 	}
 }
