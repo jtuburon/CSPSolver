@@ -19,6 +19,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.Window.Type;
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,7 +42,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	setResizable(false);
     	initComponents();
     	solver= new MainCSPSolver();
-    	initCSP07();
+    	initCSP01();
     	updateCluesList();
     }
     
@@ -206,16 +207,16 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         	gl_panel_1.createParallelGroup(Alignment.LEADING)
         		.addGroup(gl_panel_1.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+        			.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING, false)
         				.addGroup(gl_panel_1.createSequentialGroup()
         					.addComponent(lblDim, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(dim01TF, GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE))
+        					.addComponent(dim01TF))
         				.addGroup(gl_panel_1.createSequentialGroup()
         					.addComponent(lblDim_1, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(dim02TF, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)))
-        			.addContainerGap())
+        					.addComponent(dim02TF, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)))
+        			.addContainerGap(178, Short.MAX_VALUE))
         );
         gl_panel_1.setVerticalGroup(
         	gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -231,7 +232,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         				.addGroup(gl_panel_1.createSequentialGroup()
         					.addPreferredGap(ComponentPlacement.UNRELATED)
         					.addComponent(dim02TF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-        			.addContainerGap(49, Short.MAX_VALUE))
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel_1.setLayout(gl_panel_1);
 
@@ -240,10 +241,10 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel1Layout.createSequentialGroup()
         			.addContainerGap()
-        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        			.addContainerGap())
+        			.addGroup(jPanel1Layout.createParallelGroup(Alignment.TRAILING, false)
+        				.addComponent(panel_1, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+        				.addComponent(panel, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 296, Short.MAX_VALUE))
+        			.addContainerGap(3, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
         	jPanel1Layout.createParallelGroup(Alignment.LEADING)
@@ -252,7 +253,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         			.addComponent(panel, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
         			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(83, Short.MAX_VALUE))
+        			.addContainerGap(22, Short.MAX_VALUE))
         );
         jLabel1 = new javax.swing.JLabel();
         
@@ -272,8 +273,8 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         			.addContainerGap()
         			.addComponent(jLabel1)
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(d1TF, GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
-        			.addContainerGap())
+        			.addComponent(d1TF, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(186, Short.MAX_VALUE))
         );
         gl_panel.setVerticalGroup(
         	gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -310,28 +311,29 @@ public class InputCSPJFrame extends javax.swing.JFrame {
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2Layout.setHorizontalGroup(
-        	jPanel2Layout.createParallelGroup(Alignment.TRAILING)
+        	jPanel2Layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(jPanel2Layout.createSequentialGroup()
-        			.addGap(111)
-        			.addComponent(jButton3)
-        			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(jButton2)
-        			.addContainerGap())
-        		.addGroup(Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-        			.addContainerGap()
-        			.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 474, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap())
+        			.addGap(0, 0, Short.MAX_VALUE)
+        			.addGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        					.addComponent(jButton3)
+        					.addPreferredGap(ComponentPlacement.UNRELATED)
+        					.addComponent(jButton2))
+        				.addGroup(jPanel2Layout.createSequentialGroup()
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)))
+        			.addGap(181))
         );
         jPanel2Layout.setVerticalGroup(
         	jPanel2Layout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(jPanel2Layout.createSequentialGroup()
+        		.addGroup(Alignment.LEADING, jPanel2Layout.createSequentialGroup()
         			.addContainerGap()
         			.addGroup(jPanel2Layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(jButton2)
         				.addComponent(jButton3))
-        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
         			.addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
-        			.addContainerGap(269, Short.MAX_VALUE))
+        			.addContainerGap(13, Short.MAX_VALUE))
         );
         jPanel2.setLayout(jPanel2Layout);
 
@@ -344,24 +346,32 @@ public class InputCSPJFrame extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        
+        lblNewLabel = new JLabel("");
+        lblNewLabel.setIcon(new ImageIcon(InputCSPJFrame.class.getResource("/images/GameBoard.png")));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
-        	layout.createParallelGroup(Alignment.TRAILING)
-        		.addGroup(layout.createSequentialGroup()
-        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
-        				.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(solveBtn, Alignment.TRAILING))
-        			.addContainerGap())
-        );
-        layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(layout.createSequentialGroup()
-        			.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
-        			.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        			.addComponent(solveBtn)
-        			.addContainerGap())
+        			.addContainerGap()
+        			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        				.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(solveBtn))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(lblNewLabel)
+        			.addContainerGap(10, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+        	layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 227, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(solveBtn))
+        				.addComponent(lblNewLabel))
+        			.addContainerGap(10, Short.MAX_VALUE))
         );
         getContentPane().setLayout(layout);
 
@@ -455,7 +465,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        try {
+    	try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -495,4 +505,5 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     private JTextField dim01TF;
     private JLabel lblDim_1;
     private JTextField dim02TF;
+    private JLabel lblNewLabel;
 }

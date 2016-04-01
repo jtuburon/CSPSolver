@@ -8,6 +8,7 @@ import java.util.Iterator
 rule "Show Variables"
 	salience 1000
 	when
+		Solution(found==false)
 		v: Variable()
 	then
 		System.out.println(v);
@@ -16,6 +17,7 @@ end
 rule "Show Clues"
 	salience 1000
 	when
+		Solution(found==false)
 		c: Clue()
 	then
 		System.out.println(c);
@@ -24,16 +26,22 @@ end
 rule "DirectAssignment"
 	salience 600
 	when
+		s: Solution(found==false)
 		c: SingleClue(class==SingleClue, relationship == "=", $v1: dstVar, value matches "\\d+")
 		v1: Variable(name==c.dstVar, value != c.value, $g: group)
 	then		
 		retract(v1);
-		System.out.println("Removed:" + v1 + " , due to: "+ c);
+		Instruction i= new Instruction();
+		i.setRuleName("DirectAssignment");
+		i.setRuleDescription("");
+		i.addAction("Removed:" + v1 + " , due to: "+ c);
+		s.addInstruction(i);
 end
 
 rule "DirectAssignmentPropagation"
 	salience 650
 	when
+		s: Solution(found==false)
 		v: Variable()
 		$values : ArrayList( size == 1 )
         	from collect(Variable (name== v.name))
@@ -46,6 +54,7 @@ end
 rule "SingleDomainReduction"
 	salience 500
 	when
+		s: Solution(found==false)
 		c: SingleClue(class==SingleClue, relationship != InputPattern.EQUIVALENCE_RELATIONSHIP, $v1: dstVar, value matches "\\d+")
 		$values : ArrayList(size>0)
 		    from accumulate(v: Variable(name== $v1),
@@ -78,6 +87,7 @@ end
 rule "InValuesClueDomainReduction"
 	salience 500
 	when
+		s: Solution(found==false)
 		c: InValuesClue(notIn==false)
 		v: Variable(name==c.dstVar, c.getValues() not contains value)
 	then	
@@ -89,6 +99,7 @@ end
 rule "NotInValuesClueDomainReduction"
 	salience 500
 	when
+		s: Solution(found==false)
 		c: InValuesClue(notIn==true)
 		v: Variable(name==c.dstVar, c.getValues() contains value)
 	then	
@@ -100,7 +111,7 @@ end
 rule "Process TwoVarsRelationshipClue"
 	salience 450
 	when
-		//c: TwoVarsRelationshipClue($dv: dstVar, relationship == "=",  $sv: srcVar, $operator: operator)
+		s: Solution(found==false)
 		c: TwoVarsRelationshipClue($dv: dstVar, $rel: relationship,  $sv: srcVar, $operator: operator)		
 		$assignments: HashMap(size>=1)
 		    from accumulate( dv: Variable(name== $dv) and sv: Variable(name== $sv),
@@ -261,6 +272,7 @@ rule "1VarDiff3VarsInADiffGroup01"
 	no-loop true
 	salience 450
 	when
+		s: Solution(found==false)
 		v: String() from ["A1","A2","A3","A4"]
 		v1: String() from ["B1","B2","B3","B4"]
 		exists AllDiffClue(variables contains v, variables contains v1)
@@ -285,6 +297,7 @@ rule "1VarDiff3VarsInADiffGroup02"
 	no-loop true
 	salience 450
 	when
+		s: Solution(found==false)
 		v: String() from ["B1","B2","B3","B4"]
 		v1: String() from ["A1","A2","A3","A4"]
 		exists AllDiffClue(variables contains v, variables contains v1)
@@ -305,20 +318,26 @@ rule "1VarDiff3VarsInADiffGroup02"
 		insert(clue);
 end
 
-rule "Show Solution"
+rule "Found Solution"
 	salience 1000
 	when
+		s: Solution(found==false)
 		array: ArrayList(size == 8)
         	from collect(Variable())
 	then
+		s.setFound(true);
+		s.setVariables(array);
+		update(s);
 		System.out.println("Solution Found");
-		System.out.println(array);
-		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + array, "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+		System.out.println(s.toString());
+		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + s.toString(), "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+		
 end
 
 rule "Show Partial-Solution"
 	salience 0
 	when
+		s: Solution(found==false)
 		array: ArrayList(size > 8)
         	from collect(Variable())
 	then
@@ -333,6 +352,7 @@ rule "3Vars2Clues01"
 	salience 400
 	no-loop true
 	when
+		s: Solution(found==false)
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue($v3: dstVar , relationship == "=",  $v2== srcVar, $op02: operator)
 		$assignments: HashMap(size>=1)
@@ -422,6 +442,7 @@ rule "3Vars2Clues02"
 	salience 400
 	no-loop true
 	when
+		s: Solution(found==false)
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v3: dstVar , relationship == "=",  $v1== srcVar, $op02: operator)
 		$assignments: HashMap(size>=1)
@@ -513,6 +534,7 @@ rule "3Vars2Clues03"
 	salience 400
 	no-loop true
 	when
+		s: Solution(found==false)
 		c1: TwoVarsRelationshipClue($v2: dstVar, relationship == "=",  $v1: srcVar, $op01: operator)
 		c2: TwoVarsRelationshipClue(this!= c1, $v2== dstVar, relationship == "=", $v3: srcVar , $op02: operator)
 		$assignments: HashMap(size>=1)
@@ -601,6 +623,7 @@ end
 rule "XORClueRule"
 	salience 400
 	when
+		s: Solution(found==false)
 		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
 	then
 		AllDiffClue clue= new AllDiffClue();
@@ -613,6 +636,7 @@ end
 rule "XORClueRule01"
 	salience 400
 	when
+		s: Solution(found==false)
 		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
 		not Variable(name== c.getC1().getDstVar(), value==c.getC1().getValue())
 	then
@@ -624,6 +648,7 @@ end
 rule "XORClueRule02"
 	salience 400
 	when
+		s: Solution(found==false)
 		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
 		not Variable(name== c.getC2().getDstVar(), value==c.getC2().getValue())
 	then
@@ -636,6 +661,7 @@ end
 rule "OnlyOneValueInAVarGroup"
 	salience 400
 	when
+		s: Solution(found==false)
 		g: String() from ["A","B"]
 		$values: HashMap(size>=1)
 		    from accumulate(v: Variable(group==g),

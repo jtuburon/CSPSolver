@@ -53,6 +53,8 @@ public class MainCSPSolver
 	}
 	
 	public void initFacts(){
+		Solution s= new Solution();
+		kSession.insert(s);
 		for (int i=0; i< variables.size();i++) {
 			Variable v = variables.get(i);
 			kSession.insert(v);
