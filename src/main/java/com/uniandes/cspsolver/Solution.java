@@ -1,6 +1,7 @@
 package com.uniandes.cspsolver;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Solution {
 	private boolean found=false;
@@ -44,6 +45,13 @@ public class Solution {
 	
 	@Override
 	public String toString() {
-		return variables.toString()+"\n\n"+ instructions.toString();
+		String c= "Solution Found: "+ variables.toString();
+		c+="\n";
+		for (Instruction inst : instructions) {
+			c+="\n\n-------------------------------------------------\n";
+			c+=inst.toString();
+		}
+		
+		return c;
 	}
 }

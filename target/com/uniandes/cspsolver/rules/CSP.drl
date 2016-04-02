@@ -40,7 +40,7 @@ rule "Found Solution"
 		
 		System.out.println("Solution Found");
 		System.out.println(s.toString());
-		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + s.toString(), "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + array, "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 		update(s);
 end
 

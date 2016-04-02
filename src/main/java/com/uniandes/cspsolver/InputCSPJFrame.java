@@ -20,6 +20,8 @@ import java.awt.Color;
 import java.awt.Window.Type;
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
+import javax.swing.JTextPane;
+import javax.swing.JScrollPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -349,6 +351,8 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         
         lblNewLabel = new JLabel("");
         lblNewLabel.setIcon(new ImageIcon(InputCSPJFrame.class.getResource("/images/GameBoard.png")));
+        
+        JScrollPane scrollPane = new JScrollPane();
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
@@ -357,10 +361,11 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         			.addContainerGap()
         			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
         				.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(solveBtn))
+        				.addComponent(solveBtn)
+        				.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 316, GroupLayout.PREFERRED_SIZE))
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addComponent(lblNewLabel)
-        			.addContainerGap(10, Short.MAX_VALUE))
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.TRAILING)
@@ -369,10 +374,16 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         				.addGroup(layout.createSequentialGroup()
         					.addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 227, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(solveBtn))
+        					.addComponent(solveBtn)
+        					.addGap(10)
+        					.addComponent(scrollPane))
         				.addComponent(lblNewLabel))
-        			.addContainerGap(10, Short.MAX_VALUE))
+        			.addContainerGap())
         );
+        
+        solutionTPane = new JTextPane();
+        solutionTPane.setEditable(false);
+        scrollPane.setViewportView(solutionTPane);
         getContentPane().setLayout(layout);
 
         pack();
@@ -387,8 +398,10 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     			this.initVariables();
             	solver.initFacts();
             	solver.solve();
+            	solutionTPane.setText(solver.getSolution().toString());
+            	
     		}else{
-    			System.out.println("No wapeo!!");
+    			JOptionPane.showMessageDialog(null, "El conjunto de aliases de variables de alguna dimension no satisface el formato {\"v1\",\"v2\",\"v3\",\"v4\"}", "Aliases de variables en dimension invalido", JOptionPane.ERROR_MESSAGE);
     		}
     			
     	}else{
@@ -506,4 +519,5 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     private JLabel lblDim_1;
     private JTextField dim02TF;
     private JLabel lblNewLabel;
+    private JTextPane solutionTPane;
 }

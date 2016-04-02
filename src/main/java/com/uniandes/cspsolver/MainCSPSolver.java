@@ -15,6 +15,7 @@ public class MainCSPSolver
 {
 	private List<Variable> variables;
 	private List<Clue> clues;
+	private Solution solution=null;
 	
 	private KieSession kSession;
 	
@@ -52,9 +53,17 @@ public class MainCSPSolver
 		variables.add(v);
 	}
 	
+	public Solution getSolution() {
+		return solution;
+	}
+	
+	public void setSolution(Solution solution) {
+		this.solution = solution;
+	}
+	
 	public void initFacts(){
-		Solution s= new Solution();
-		kSession.insert(s);
+		solution= new Solution();
+		kSession.insert(solution);
 		for (int i=0; i< variables.size();i++) {
 			Variable v = variables.get(i);
 			kSession.insert(v);
