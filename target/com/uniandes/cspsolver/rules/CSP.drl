@@ -23,7 +23,39 @@ rule "Show Clues"
 		System.out.println(c);
 end
 
-rule "DirectAssignment"
+rule "Found Solution"
+	salience 1000
+	when
+		s: Solution(found==false)
+		array: ArrayList(size == 8)
+        	from collect(Variable())
+	then
+		s.setFound(true);
+		s.setVariables(array);
+		Instruction i= new Instruction();
+		i.setRuleName("Found Solution!!!");
+		i.setRuleDescription("");
+		i.addAction("Solution Found: "+ array);
+		s.addInstruction(i);
+		
+		System.out.println("Solution Found");
+		System.out.println(s.toString());
+		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + s.toString(), "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+		update(s);
+end
+
+rule "Show Partial-Solution"
+	salience 0
+	when
+		s: Solution(found==false)
+		array: ArrayList(size > 8)
+        	from collect(Variable())
+	then
+		System.out.println("Partial Solution");
+		System.out.println(s.toString());
+end
+
+rule "DirectAssignmentClue"
 	salience 600
 	when
 		s: Solution(found==false)
@@ -32,7 +64,7 @@ rule "DirectAssignment"
 	then		
 		retract(v1);
 		Instruction i= new Instruction();
-		i.setRuleName("DirectAssignment");
+		i.setRuleName("DirectAssignmentClue");
 		i.setRuleDescription("");
 		i.addAction("Removed:" + v1 + " , due to: "+ c);
 		s.addInstruction(i);
@@ -47,8 +79,12 @@ rule "DirectAssignmentPropagation"
         	from collect(Variable (name== v.name))
         $var: Variable(group== v.group, value==v.value, name!= v.name)  
 	then
-		System.out.println("Removed:" + $var + " , due to: " +v);
 		retract($var);
+		Instruction i= new Instruction();
+		i.setRuleName("DirectAssignmentPropagation");
+		i.setRuleDescription("");
+		i.addAction("Removed:" + $var + " , due to: " +v);
+		s.addInstruction(i);
 end
 
 rule "SingleDomainReduction"
@@ -76,12 +112,15 @@ rule "SingleDomainReduction"
 		        result(list)
 		    );
 	then	
-		System.out.println("SingleDomainRestriction::");
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("SingleDomainRestriction::");
+		instruction.setRuleDescription("");
 		for(int i=0; i< $values.size();i++){
 			Variable v = (Variable) $values.get(i);
-			System.out.println(v+ " removed due to: " +  c);
 			retract(v);
+			instruction.addAction(v+ " removed due to: " +  c);
 		}
+		s.addInstruction(instruction);
 end
 
 rule "InValuesClueDomainReduction"
@@ -91,8 +130,11 @@ rule "InValuesClueDomainReduction"
 		c: InValuesClue(notIn==false)
 		v: Variable(name==c.dstVar, c.getValues() not contains value)
 	then	
-		System.out.println("InValuesClueDomainRestriction::");
-		System.out.println(v +" removed due to " + c);
+		Instruction i= new Instruction();
+		i.setRuleName("InValuesClueDomainRestriction::");
+		i.setRuleDescription("");
+		i.addAction(v +" removed due to " + c);
+		s.addInstruction(i);
 		retract(v);
 end
 
@@ -103,8 +145,11 @@ rule "NotInValuesClueDomainReduction"
 		c: InValuesClue(notIn==true)
 		v: Variable(name==c.dstVar, c.getValues() contains value)
 	then	
-		System.out.println("NotInValuesClueDomainRestriction::");
-		System.out.println(v +" removed due to " + c);
+		Instruction i= new Instruction();
+		i.setRuleName("NotInValuesClueDomainRestriction::");
+		i.setRuleDescription("");
+		i.addAction(v +" removed due to " + c);
+		s.addInstruction(i);
 		retract(v);
 end
 
@@ -174,13 +219,17 @@ rule "Process TwoVarsRelationshipClue"
 		        result(h)
 		    );
 	then
-		System.out.println("TVRC ==>> ");
-		System.out.println(c);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("TwoVarsRelationshipClue");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
+		
+		
 		if(!$rel.equals("=")&& c.getValue()==0 || ($rel.equals("=") && c.getValue()!=0)){
 			AllDiffClue clue= new AllDiffClue();
 			clue.addVariable($dv);
 			clue.addVariable($sv);
-			System.out.println(clue.toString()+ " added due to: "+c);
+			instruction.addAction(clue.toString()+ " added due to: "+c);
 			insert(clue);
 		}else if($rel.equals("=")&& c.getValue()==0){
 			AllDiffClue clue01= new AllDiffClue();
@@ -198,6 +247,7 @@ rule "Process TwoVarsRelationshipClue"
 				if(!$sv.equals(group01+i))
 					clue01.addVariable(group01+i);
 			}   
+			instruction.addAction(clue01+ " added due to: "+c);
 			insert(clue01);
 			
 			AllDiffClue clue02= new AllDiffClue();
@@ -215,6 +265,7 @@ rule "Process TwoVarsRelationshipClue"
 				if(!$dv.equals(group02+i))
 					clue02.addVariable(group02+i);
 			}   
+			instruction.addAction(clue02+ " added due to: "+c);
 			insert(clue02);
 		}
 		if($assignments.size()==1){
@@ -224,6 +275,7 @@ rule "Process TwoVarsRelationshipClue"
 			sc1.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 			sc1.setValue(dest.getValue());
 			insert(sc1);
+			instruction.addAction(sc1+ " added due to: " + c + " is solved only: " + $assignments);
 			
 			ArrayList<Variable> sources= (ArrayList<Variable>)$assignments.get(dest);
 			if(sources.size()==1){
@@ -232,6 +284,7 @@ rule "Process TwoVarsRelationshipClue"
 				sc2.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 				sc2.setValue(sources.get(0).getValue());
 				insert(sc2);
+				instruction.addAction(sc2+ " added due to: " + c + " is solved only: " + $assignments);
 			}else if(sources.size()>1){
 				InValuesClue ivc= new InValuesClue();
 				for (int i=0;i< sources.size();i++){
@@ -239,8 +292,10 @@ rule "Process TwoVarsRelationshipClue"
 					ivc.setDstVar(v.getName());
 					ivc.addValue(Integer.valueOf(v.getValue()));
 				}
-				if(ivc.getValues().size()>0)
+				if(ivc.getValues().size()>0){
 					insert(ivc);
+					instruction.addAction(ivc+ " added due to: " + c + " domain's solution is : " + $assignments);
+				}
 			}
 		}else{
 			InValuesClue ivc1= new InValuesClue();
@@ -259,12 +314,16 @@ rule "Process TwoVarsRelationshipClue"
 				}
 			 	
 			}
-			if(ivc1.getValues().size()>0)
+			if(ivc1.getValues().size()>0){
 				insert(ivc1);
-			if(ivc2.getValues().size()>0)
+				instruction.addAction(ivc1+ " added due to: " + c + " domain's solution is : " + $assignments);
+			}
+				
+			if(ivc2.getValues().size()>0){
 				insert(ivc2);
+				instruction.addAction(ivc2+ " added due to: " + c + " domain's solution is : " + $assignments);	
+			}
 		}
-		
 end
 
 
@@ -282,8 +341,11 @@ rule "1VarDiff3VarsInADiffGroup01"
 		exists AllDiffClue(variables contains v, variables contains v3)
 		v4: String(this!=v1, this!=v2, this!=v3) from ["B1","B2","B3","B4"]
 	then
-		System.out.println("1VarDiff3VarsInADiffGroup");
-		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("OneVarDifferentFromThreeVarsInAnotherDimension01");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
+		
 		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
 		clue.setDstVar(v);
 		clue.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
@@ -291,6 +353,8 @@ rule "1VarDiff3VarsInADiffGroup01"
 		clue.setOperator("+");
 		clue.setValue(0);
 		insert(clue);
+		String explanation= v+ " is different from: "+ v1+ ", "+ v2+ ", "+ v3; 
+		instruction.addAction(clue+ " added due to: " + explanation);
 end
 
 rule "1VarDiff3VarsInADiffGroup02"
@@ -307,8 +371,10 @@ rule "1VarDiff3VarsInADiffGroup02"
 		exists AllDiffClue(variables contains v, variables contains v3)
 		v4: String(this!=v1, this!=v2, this!=v3) from ["A1","A2","A3","A4"]
 	then
-		System.out.println("1VarDiff3VarsInADiffGroup02");
-		System.out.println(v.toString()+","+v1.toString()+","+v2.toString()+","+v3.toString());
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("OneVarDifferentFromThreeVarsInAnotherDimension01");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
 		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
 		clue.setDstVar(v);
 		clue.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
@@ -316,37 +382,9 @@ rule "1VarDiff3VarsInADiffGroup02"
 		clue.setOperator("+");
 		clue.setValue(0);
 		insert(clue);
+		String explanation= v+ " is different from: "+ v1+ ", "+ v2+ ", "+ v3; 
+		instruction.addAction(clue+ " added due to: " + explanation);
 end
-
-rule "Found Solution"
-	salience 1000
-	when
-		s: Solution(found==false)
-		array: ArrayList(size == 8)
-        	from collect(Variable())
-	then
-		s.setFound(true);
-		s.setVariables(array);
-		update(s);
-		System.out.println("Solution Found");
-		System.out.println(s.toString());
-		javax.swing.JOptionPane.showMessageDialog(null, "Solution: " + s.toString(), "Solution Found", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-		
-end
-
-rule "Show Partial-Solution"
-	salience 0
-	when
-		s: Solution(found==false)
-		array: ArrayList(size > 8)
-        	from collect(Variable())
-	then
-		System.out.println("Partial Solution");
-		System.out.println(array);
-end
-
-
-
 
 rule "3Vars2Clues01"
 	salience 400
@@ -391,9 +429,10 @@ rule "3Vars2Clues01"
 		        result(h)
 		    );
 	then
-		System.out.println("3Vars2Clues01 ==>>");
-		System.out.println(c1);
-		System.out.println(c2);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("3VariablesRelatedIn2Clues01");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
 		if(combinations.size()==1){
@@ -405,6 +444,8 @@ rule "3Vars2Clues01"
 				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 				sc.setValue(v.getValue());
 				insert(sc);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
+				instruction.addAction(sc+ " added due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -427,14 +468,24 @@ rule "3Vars2Clues01"
 					}
 				}
 			}
-			if(ivc1.getValues().size()>0)
+			if(ivc1.getValues().size()>0){
 				insert(ivc1);
-			if(ivc2.getValues().size()>0)
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc1+ " added due to: " + explanation);
+			}
+				
+			if(ivc2.getValues().size()>0){
 				insert(ivc2);
-			if(ivc3.getValues().size()>0)
-				insert(ivc3);	
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc2+ " added due to: " + explanation);
+			}
+				
+			if(ivc3.getValues().size()>0){
+				insert(ivc3);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc3+ " added due to: " + explanation);
+			}	
 		}
-		
 end
 
 
@@ -481,9 +532,10 @@ rule "3Vars2Clues02"
 		        result(h)
 		    );
 	then
-		System.out.println("3Vars2Clues02 ==>>");
-		System.out.println(c1);
-		System.out.println(c2);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("3VariablesRelatedIn2Clues02");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
 		if(combinations.size()==1){
@@ -495,6 +547,8 @@ rule "3Vars2Clues02"
 				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 				sc.setValue(v.getValue());
 				insert(sc);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
+				instruction.addAction(sc+ " added due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -518,15 +572,24 @@ rule "3Vars2Clues02"
 				}
 			}
 			
-			if(ivc1.getValues().size()>0)
+			if(ivc1.getValues().size()>0){
 				insert(ivc1);
-			if(ivc2.getValues().size()>0)
-				insert(ivc2);
-			if(ivc3.getValues().size()>0)
-				insert(ivc3);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc1+ " added due to: " + explanation);
+			}
 				
+			if(ivc2.getValues().size()>0){
+				insert(ivc2);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc2+ " added due to: " + explanation);
+			}
+				
+			if(ivc3.getValues().size()>0){
+				insert(ivc3);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc3+ " added due to: " + explanation);
+			}	
 		}
-		
 end
 
 
@@ -573,9 +636,10 @@ rule "3Vars2Clues03"
 		        result(h)
 		    );
 	then
-		System.out.println("3Vars2Clues03 ==>>");
-		System.out.println(c1);
-		System.out.println(c2);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("3VariablesRelatedIn2Clues03");
+		instruction.setRuleDescription("");
+		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
 		if(combinations.size()==1){
@@ -587,6 +651,8 @@ rule "3Vars2Clues03"
 				sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 				sc.setValue(v.getValue());
 				insert(sc);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
+				instruction.addAction(sc+ " added due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -610,17 +676,28 @@ rule "3Vars2Clues03"
 				}
 			}
 			
-			if(ivc1.getValues().size()>0)
+			if(ivc1.getValues().size()>0){
 				insert(ivc1);
-			if(ivc2.getValues().size()>0)
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc1+ " added due to: " + explanation);
+			}
+				
+			if(ivc2.getValues().size()>0){
 				insert(ivc2);
-			if(ivc3.getValues().size()>0)
-				insert(ivc3);	
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc2+ " added due to: " + explanation);
+			}
+				
+			if(ivc3.getValues().size()>0){
+				insert(ivc3);
+				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
+				instruction.addAction(ivc3+ " added due to: " + explanation);
+			}		
 		}
 end
 
 
-rule "XORClueRule"
+rule "CustomXORClueRule"
 	salience 400
 	when
 		s: Solution(found==false)
@@ -629,8 +706,12 @@ rule "XORClueRule"
 		AllDiffClue clue= new AllDiffClue();
 		clue.addVariable(v1);
 		clue.addVariable(v2);
-		System.out.println(clue.toString()+ " added due to: "+c);
 		insert(clue);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("CustomXORClueRule");
+		instruction.setRuleDescription("");
+		instruction.addAction(clue + " added due to: "+ c);
+		s.addInstruction(instruction);
 end
 
 rule "XORClueRule01"
@@ -640,9 +721,12 @@ rule "XORClueRule01"
 		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
 		not Variable(name== c.getC1().getDstVar(), value==c.getC1().getValue())
 	then
-		System.out.println("XORClueRule01: "+c);
-		System.out.println(c.getC2().toString() + " added due to: not("+ c.getC1().toString()+ ")");
 		insert(c.getC2());
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("XORClueRule01");
+		instruction.setRuleDescription("");
+		instruction.addAction(c.getC2() + " added due to: not("+ c.getC1()+ ")");
+		s.addInstruction(instruction);
 end
 
 rule "XORClueRule02"
@@ -652,9 +736,12 @@ rule "XORClueRule02"
 		c: XORClue(c1.getValue() == c2.getValue(), c1.getClass()== SingleClue, c2.getClass()== SingleClue, v1: c1.getDstVar(), v2: c2.getDstVar())
 		not Variable(name== c.getC2().getDstVar(), value==c.getC2().getValue())
 	then
-		System.out.println("XORClueRule01: "+c);
-		System.out.println(c.getC1().toString() + " added due to: not("+ c.getC2().toString()+ ")");
 		insert(c.getC1());
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("XORClueRule01");
+		instruction.setRuleDescription("");
+		instruction.addAction(c.getC1() + " added due to: not("+ c.getC2()+ ")");
+		s.addInstruction(instruction);
 end
 
 
@@ -677,13 +764,16 @@ rule "OnlyOneValueInAVarGroup"
 		    );
 		$varList: ArrayList(size==1) from $values.values()
 	then
-		System.out.println("OnlyOneValueInAVarGroup: ");
 		Variable v=(Variable)$varList.get(0);
 		System.out.println(v);
 		SingleClue sc= new SingleClue();
 		sc.setDstVar(v.getName());
 		sc.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 		sc.setValue(v.getValue());
-		System.out.println("Added: "+ sc.toString()+ " due to OnlyOneValueInAVarGroup: " + v.toString());
 		insert(sc);
+		Instruction instruction= new Instruction();
+		instruction.setRuleName("OnlyOneValueInAVarDimension: ");
+		instruction.setRuleDescription("");
+		instruction.addAction("Added: "+ sc + " due to OnlyOneValueInAVarDimension: " + v);
+		s.addInstruction(instruction);
 end
