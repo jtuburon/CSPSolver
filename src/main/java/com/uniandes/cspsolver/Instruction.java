@@ -49,4 +49,21 @@ public class Instruction {
 		}
 		return text;
 	}
+	
+	public String toHtml() {
+		String text= "<br><br><b>RuleName:</b> "+ruleName;
+		text+= "<br><b>Description:</b> "+ruleDescription;
+		text+= "<br><b>Actions:</b> ";
+		for(int i= 0; i< actions.size();i++){
+			text+="<br>\t" + actionToHtml(actions.get(i));
+		}
+		return text;
+	}
+	
+	private String actionToHtml(String action){
+		String html= action.replaceAll("Removed", "<b color=\"#FF0000\">Removed:</b>");
+		html= html.replaceAll("Added:", "<b color=\"#00FF00\">Added:</b>");
+		html= html.replaceAll("due to:", "<b color=\"#0000FF\">due to:</b>");
+		return html; 
+	}
 }

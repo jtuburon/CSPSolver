@@ -45,13 +45,28 @@ public class Solution {
 	
 	@Override
 	public String toString() {
-		String c= "Solution Found: "+ variables.toString();
-		c+="\n";
+		String c="Partial Solution: ";
+		if(isFound()){
+			c="Solution Found: ";
+		}		;
+		c+=variables.toString()+"\n";
 		for (Instruction inst : instructions) {
 			c+="\n\n-------------------------------------------------\n";
 			c+=inst.toString();
 		}
-		
 		return c;
+	}
+	
+	public String toHtml() {
+		String html= "<b>Partial Solution:</b> ";
+		if(isFound()){
+			html= "<b>Solution Found:</b> ";
+		}
+		html+=variables.toString()+"<br>";
+		for (Instruction inst : instructions) {
+			html+="<br><br>-------------------------------------------------<br>";
+			html+=inst.toHtml();
+		}
+		return html;
 	}
 }

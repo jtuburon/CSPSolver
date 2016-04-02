@@ -51,6 +51,7 @@ rule "Show Partial-Solution"
 		array: ArrayList(size > 8)
         	from collect(Variable())
 	then
+		s.setVariables(array);
 		System.out.println("Partial Solution");
 		System.out.println(s.toString());
 end
@@ -229,7 +230,7 @@ rule "Process TwoVarsRelationshipClue"
 			AllDiffClue clue= new AllDiffClue();
 			clue.addVariable($dv);
 			clue.addVariable($sv);
-			instruction.addAction(clue.toString()+ " added due to: "+c);
+			instruction.addAction("Added: " + clue.toString()+ " due to: "+c);
 			insert(clue);
 		}else if($rel.equals("=")&& c.getValue()==0){
 			AllDiffClue clue01= new AllDiffClue();
@@ -247,7 +248,7 @@ rule "Process TwoVarsRelationshipClue"
 				if(!$sv.equals(group01+i))
 					clue01.addVariable(group01+i);
 			}   
-			instruction.addAction(clue01+ " added due to: "+c);
+			instruction.addAction("Added: " + clue01+ " due to: "+c);
 			insert(clue01);
 			
 			AllDiffClue clue02= new AllDiffClue();
@@ -265,7 +266,7 @@ rule "Process TwoVarsRelationshipClue"
 				if(!$dv.equals(group02+i))
 					clue02.addVariable(group02+i);
 			}   
-			instruction.addAction(clue02+ " added due to: "+c);
+			instruction.addAction("Added: " + clue02+ " due to: "+c);
 			insert(clue02);
 		}
 		if($assignments.size()==1){
@@ -275,7 +276,7 @@ rule "Process TwoVarsRelationshipClue"
 			sc1.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 			sc1.setValue(dest.getValue());
 			insert(sc1);
-			instruction.addAction(sc1+ " added due to: " + c + " is solved only: " + $assignments);
+			instruction.addAction("Added: " + sc1+ " due to: " + c + " is solved only: " + $assignments);
 			
 			ArrayList<Variable> sources= (ArrayList<Variable>)$assignments.get(dest);
 			if(sources.size()==1){
@@ -284,7 +285,7 @@ rule "Process TwoVarsRelationshipClue"
 				sc2.setRelationship(InputPattern.EQUIVALENCE_RELATIONSHIP);
 				sc2.setValue(sources.get(0).getValue());
 				insert(sc2);
-				instruction.addAction(sc2+ " added due to: " + c + " is solved only: " + $assignments);
+				instruction.addAction("Added: " + sc2+ " due to: " + c + " is solved only: " + $assignments);
 			}else if(sources.size()>1){
 				InValuesClue ivc= new InValuesClue();
 				for (int i=0;i< sources.size();i++){
@@ -294,7 +295,7 @@ rule "Process TwoVarsRelationshipClue"
 				}
 				if(ivc.getValues().size()>0){
 					insert(ivc);
-					instruction.addAction(ivc+ " added due to: " + c + " domain's solution is : " + $assignments);
+					instruction.addAction("Added: " + ivc+ " due to: " + c + " domain's solution is : " + $assignments);
 				}
 			}
 		}else{
@@ -316,12 +317,12 @@ rule "Process TwoVarsRelationshipClue"
 			}
 			if(ivc1.getValues().size()>0){
 				insert(ivc1);
-				instruction.addAction(ivc1+ " added due to: " + c + " domain's solution is : " + $assignments);
+				instruction.addAction("Added: " + ivc1+ " due to: " + c + " domain's solution is : " + $assignments);
 			}
 				
 			if(ivc2.getValues().size()>0){
 				insert(ivc2);
-				instruction.addAction(ivc2+ " added due to: " + c + " domain's solution is : " + $assignments);	
+				instruction.addAction("Added: " + ivc2+ " due to: " + c + " domain's solution is : " + $assignments);	
 			}
 		}
 end
@@ -354,7 +355,7 @@ rule "1VarDiff3VarsInADiffGroup01"
 		clue.setValue(0);
 		insert(clue);
 		String explanation= v+ " is different from: "+ v1+ ", "+ v2+ ", "+ v3; 
-		instruction.addAction(clue+ " added due to: " + explanation);
+		instruction.addAction("Added: " + clue+ " due to: " + explanation);
 end
 
 rule "1VarDiff3VarsInADiffGroup02"
@@ -383,7 +384,7 @@ rule "1VarDiff3VarsInADiffGroup02"
 		clue.setValue(0);
 		insert(clue);
 		String explanation= v+ " is different from: "+ v1+ ", "+ v2+ ", "+ v3; 
-		instruction.addAction(clue+ " added due to: " + explanation);
+		instruction.addAction("Added: " + clue+ " due to: " + explanation);
 end
 
 rule "3Vars2Clues01"
@@ -445,7 +446,7 @@ rule "3Vars2Clues01"
 				sc.setValue(v.getValue());
 				insert(sc);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
-				instruction.addAction(sc+ " added due to: " + explanation);
+				instruction.addAction("Added: " + sc+ " due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -471,19 +472,19 @@ rule "3Vars2Clues01"
 			if(ivc1.getValues().size()>0){
 				insert(ivc1);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc1+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc1+ " due to: " + explanation);
 			}
 				
 			if(ivc2.getValues().size()>0){
 				insert(ivc2);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc2+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc2+ " due to: " + explanation);
 			}
 				
 			if(ivc3.getValues().size()>0){
 				insert(ivc3);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc3+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc3+ " due to: " + explanation);
 			}	
 		}
 end
@@ -548,7 +549,7 @@ rule "3Vars2Clues02"
 				sc.setValue(v.getValue());
 				insert(sc);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
-				instruction.addAction(sc+ " added due to: " + explanation);
+				instruction.addAction("Added: " + sc+ " due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -575,19 +576,19 @@ rule "3Vars2Clues02"
 			if(ivc1.getValues().size()>0){
 				insert(ivc1);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc1+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc1+ " due to: " + explanation);
 			}
 				
 			if(ivc2.getValues().size()>0){
 				insert(ivc2);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc2+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc2+ " due to: " + explanation);
 			}
 				
 			if(ivc3.getValues().size()>0){
 				insert(ivc3);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc3+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc3+ " due to: " + explanation);
 			}	
 		}
 end
@@ -652,7 +653,7 @@ rule "3Vars2Clues03"
 				sc.setValue(v.getValue());
 				insert(sc);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has unique solution: "+ vars;
-				instruction.addAction(sc+ " added due to: " + explanation);
+				instruction.addAction("Added: " + sc+ " due to: " + explanation);
 			}
 		}else if(combinations.size()>1){
 			InValuesClue ivc1= new InValuesClue();
@@ -679,19 +680,19 @@ rule "3Vars2Clues03"
 			if(ivc1.getValues().size()>0){
 				insert(ivc1);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc1+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc1+ " due to: " + explanation);
 			}
 				
 			if(ivc2.getValues().size()>0){
 				insert(ivc2);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc2+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc2+ " due to: " + explanation);
 			}
 				
 			if(ivc3.getValues().size()>0){
 				insert(ivc3);
 				String explanation= "{"+ c1 + ", "+ c2+" } system has solutions: "+ combinations;
-				instruction.addAction(ivc3+ " added due to: " + explanation);
+				instruction.addAction("Added: " + ivc3+ " due to: " + explanation);
 			}		
 		}
 end
@@ -710,7 +711,7 @@ rule "CustomXORClueRule"
 		Instruction instruction= new Instruction();
 		instruction.setRuleName("CustomXORClueRule");
 		instruction.setRuleDescription("");
-		instruction.addAction(clue + " added due to: "+ c);
+		instruction.addAction("Added: " + clue + " due to: "+ c);
 		s.addInstruction(instruction);
 end
 
@@ -725,7 +726,7 @@ rule "XORClueRule01"
 		Instruction instruction= new Instruction();
 		instruction.setRuleName("XORClueRule01");
 		instruction.setRuleDescription("");
-		instruction.addAction(c.getC2() + " added due to: not("+ c.getC1()+ ")");
+		instruction.addAction("Added: " + c.getC2() + " due to: not("+ c.getC1()+ ")");
 		s.addInstruction(instruction);
 end
 
@@ -740,7 +741,7 @@ rule "XORClueRule02"
 		Instruction instruction= new Instruction();
 		instruction.setRuleName("XORClueRule01");
 		instruction.setRuleDescription("");
-		instruction.addAction(c.getC1() + " added due to: not("+ c.getC2()+ ")");
+		instruction.addAction("Added: " + c.getC1() + " due to: not("+ c.getC2()+ ")");
 		s.addInstruction(instruction);
 end
 
@@ -774,6 +775,6 @@ rule "OnlyOneValueInAVarGroup"
 		Instruction instruction= new Instruction();
 		instruction.setRuleName("OnlyOneValueInAVarDimension: ");
 		instruction.setRuleDescription("");
-		instruction.addAction("Added: "+ sc + " due to OnlyOneValueInAVarDimension: " + v);
+		instruction.addAction("Added: "+ sc + " due to: OnlyOneValueInAVarDimension: " + v);
 		s.addInstruction(instruction);
 end

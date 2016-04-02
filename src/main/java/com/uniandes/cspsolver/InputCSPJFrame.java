@@ -382,6 +382,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
         );
         
         solutionTPane = new JTextPane();
+        solutionTPane.setContentType("text/html");
         solutionTPane.setEditable(false);
         scrollPane.setViewportView(solutionTPane);
         getContentPane().setLayout(layout);
@@ -398,7 +399,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     			this.initVariables();
             	solver.initFacts();
             	solver.solve();
-            	solutionTPane.setText(solver.getSolution().toString());
+            	solutionTPane.setText(solver.getSolution().toHtml());
             	
     		}else{
     			JOptionPane.showMessageDialog(null, "El conjunto de aliases de variables de alguna dimension no satisface el formato {\"v1\",\"v2\",\"v3\",\"v4\"}", "Aliases de variables en dimension invalido", JOptionPane.ERROR_MESSAGE);
