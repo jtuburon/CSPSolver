@@ -421,7 +421,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	domainAsString= domainAsString.replaceAll("\\s+", "");
 		String values[]= domainAsString.split(",");
     	for(char i='A'; i<='B'; i++){
-    		p = Pattern.compile(InputPattern.SINGLE_RELATIONSHIP_PATTERN);
+    		p = Pattern.compile(InputPattern.FOUR_VARIABLE_ALIASES_PATTERN);
     		String varAliasesAsString=""; 
     		switch(i){
     			case 'A':
@@ -432,11 +432,11 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     				break;
     		}
 			m= p.matcher(varAliasesAsString);
-    		
+    		boolean matched=m.find();
     		for(int j=1; j<=4; j++){
     			String varName= ""+i+j;
     			String varAlias=varName;
-    			if(m.find()){
+    			if(matched){
     				varAlias=m.group("alias0"+ j);
     			}
     			
