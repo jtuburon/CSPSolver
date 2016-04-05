@@ -33,8 +33,8 @@ rule "Found Solution"
 		s.setFound(true);
 		s.setVariables(array);
 		Instruction i= new Instruction();
-		i.setRuleName("Found Solution!!!");
-		i.setRuleDescription("");
+		i.setRuleName(Clue.FOUND_SOLUTION_RULE_NAME);
+		i.setRuleDescription(Clue.FOUND_SOLUTION_RULE_DESC);
 		i.addAction("Solution Found: "+ array);
 		s.addInstruction(i);
 		
@@ -65,8 +65,8 @@ rule "DirectAssignmentClue"
 	then		
 		retract(v1);
 		Instruction i= new Instruction();
-		i.setRuleName("DirectAssignmentClue");
-		i.setRuleDescription("");
+		i.setRuleName(Clue.DIRECT_ASSIGNMENT_CLUE_RULE_NAME);
+		i.setRuleDescription(Clue.DIRECT_ASSIGNMENT_CLUE_RULE_DESC);
 		i.addAction("Removed:" + v1 + " , due to: "+ c);
 		s.addInstruction(i);
 end
@@ -82,8 +82,8 @@ rule "DirectAssignmentPropagation"
 	then
 		retract($var);
 		Instruction i= new Instruction();
-		i.setRuleName("DirectAssignmentPropagation");
-		i.setRuleDescription("");
+		i.setRuleName(Clue.DIRECT_ASSIGNMENT_PROPAGATION_RULE_NAME);
+		i.setRuleDescription(Clue.DIRECT_ASSIGNMENT_PROPAGATION_RULE_DESC);
 		i.addAction("Removed:" + $var + " , due to: " +v);
 		s.addInstruction(i);
 end
@@ -114,8 +114,8 @@ rule "SingleDomainReduction"
 		    );
 	then	
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("SingleDomainRestriction::");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.SINGLE_DOMAIN_REDUCTION_RULE_NAME);
+		instruction.setRuleDescription(Clue.SINGLE_DOMAIN_REDUCTION_RULE_DESC);
 		for(int i=0; i< $values.size();i++){
 			Variable v = (Variable) $values.get(i);
 			retract(v);
@@ -132,8 +132,8 @@ rule "InValuesClueDomainReduction"
 		v: Variable(name==c.dstVar, c.getValues() not contains value)
 	then	
 		Instruction i= new Instruction();
-		i.setRuleName("InValuesClueDomainRestriction::");
-		i.setRuleDescription("");
+		i.setRuleName(Clue.INVALUES_CLUE_DOMAIN_REDUCTION_RULE_NAME);
+		i.setRuleDescription(Clue.INVALUES_CLUE_DOMAIN_REDUCTION_RULE_DESC);
 		i.addAction(v +" removed due to " + c);
 		s.addInstruction(i);
 		retract(v);
@@ -147,8 +147,8 @@ rule "NotInValuesClueDomainReduction"
 		v: Variable(name==c.dstVar, c.getValues() contains value)
 	then	
 		Instruction i= new Instruction();
-		i.setRuleName("NotInValuesClueDomainRestriction::");
-		i.setRuleDescription("");
+		i.setRuleName(Clue.NOT_IN_VALUES_CLUE_DOMAIN_REDUCTION_RULE_NAME);
+		i.setRuleDescription(Clue.NOT_IN_VALUES_CLUE_DOMAIN_REDUCTION_RULE_DESC);
 		i.addAction(v +" removed due to " + c);
 		s.addInstruction(i);
 		retract(v);
@@ -221,8 +221,8 @@ rule "Process TwoVarsRelationshipClue"
 		    );
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("TwoVarsRelationshipClue");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.TWO_VARS_RELATIONSHIP_CLUE_RULE_NAME);
+		instruction.setRuleDescription(Clue.TWO_VARS_RELATIONSHIP_CLUE_RULE_DESC);
 		s.addInstruction(instruction);
 		
 		
@@ -343,8 +343,8 @@ rule "1VarDiff3VarsInADiffGroup01"
 		v4: String(this!=v1, this!=v2, this!=v3) from ["B1","B2","B3","B4"]
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("OneVarDifferentFromThreeVarsInAnotherDimension01");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.ONEVAR_DIFF_3VARS_IN_A_DIFF_GROUP_01_RULE_NAME);
+		instruction.setRuleDescription(Clue.ONEVAR_DIFF_3VARS_IN_A_DIFF_GROUP_01_RULE_DESC);
 		s.addInstruction(instruction);
 		
 		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
@@ -373,8 +373,8 @@ rule "1VarDiff3VarsInADiffGroup02"
 		v4: String(this!=v1, this!=v2, this!=v3) from ["A1","A2","A3","A4"]
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("OneVarDifferentFromThreeVarsInAnotherDimension01");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.ONEVAR_DIFF_3VARS_IN_A_DIFF_GROUP_02_RULE_NAME);
+		instruction.setRuleDescription(Clue.ONEVAR_DIFF_3VARS_IN_A_DIFF_GROUP_02_RULE_DESC);
 		s.addInstruction(instruction);
 		TwoVarsRelationshipClue clue= new TwoVarsRelationshipClue();
 		clue.setDstVar(v);
@@ -431,8 +431,8 @@ rule "3Vars2Clues01"
 		    );
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("3VariablesRelatedIn2Clues01");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.THREE_VARS_TWO_CLUES_01_RULE_NAME);
+		instruction.setRuleDescription(Clue.THREE_VARS_TWO_CLUES_01_RULE_DESC);
 		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
@@ -534,8 +534,8 @@ rule "3Vars2Clues02"
 		    );
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("3VariablesRelatedIn2Clues02");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.THREE_VARS_TWO_CLUES_02_RULE_NAME);
+		instruction.setRuleDescription(Clue.THREE_VARS_TWO_CLUES_02_RULE_DESC);
 		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
@@ -638,8 +638,8 @@ rule "3Vars2Clues03"
 		    );
 	then
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("3VariablesRelatedIn2Clues03");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.THREE_VARS_TWO_CLUES_03_RULE_NAME);
+		instruction.setRuleDescription(Clue.THREE_VARS_TWO_CLUES_03_RULE_DESC);
 		s.addInstruction(instruction);
 		ArrayList<ArrayList<Variable>> combinations= new ArrayList($assignments.values());
 		System.out.println(combinations);
@@ -709,8 +709,8 @@ rule "CustomXORClueRule"
 		clue.addVariable(v2);
 		insert(clue);
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("CustomXORClueRule");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.CUSTOM_XOR_CLUE_RULE_NAME);
+		instruction.setRuleDescription(Clue.CUSTOM_XOR_CLUE_RULE_DESC);
 		instruction.addAction("Added: " + clue + " due to: "+ c);
 		s.addInstruction(instruction);
 end
@@ -724,8 +724,8 @@ rule "XORClueRule01"
 	then
 		insert(c.getC2());
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("XORClueRule01");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.XOR_CLUE_01_RULE_NAME);
+		instruction.setRuleDescription(Clue.XOR_CLUE_01_RULE_DESC);
 		instruction.addAction("Added: " + c.getC2() + " due to: not("+ c.getC1()+ ")");
 		s.addInstruction(instruction);
 end
@@ -739,8 +739,8 @@ rule "XORClueRule02"
 	then
 		insert(c.getC1());
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("XORClueRule01");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.XOR_CLUE_02_RULE_NAME);
+		instruction.setRuleDescription(Clue.XOR_CLUE_01_RULE_DESC);
 		instruction.addAction("Added: " + c.getC1() + " due to: not("+ c.getC2()+ ")");
 		s.addInstruction(instruction);
 end
@@ -773,8 +773,8 @@ rule "OnlyOneValueInAVarGroup"
 		sc.setValue(v.getValue());
 		insert(sc);
 		Instruction instruction= new Instruction();
-		instruction.setRuleName("OnlyOneValueInAVarDimension: ");
-		instruction.setRuleDescription("");
+		instruction.setRuleName(Clue.ONLY_ONE_VALUE_IN_A_VAR_DIMENSION_RULE_NAME);
+		instruction.setRuleDescription(Clue.ONLY_ONE_VALUE_IN_A_VAR_DIMENSION_RULE_DESC);
 		instruction.addAction("Added: "+ sc + " due to: OnlyOneValueInAVarDimension: " + v);
 		s.addInstruction(instruction);
 end
