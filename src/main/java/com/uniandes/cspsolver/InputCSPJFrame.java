@@ -463,6 +463,8 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	if(c!= null){
     		solver.addClue(c);
     		updateCluesList();
+    	}else{
+    		JOptionPane.showMessageDialog(null, "Clue doesn't match formal language!!", "Invalid Clue", JOptionPane.WARNING_MESSAGE);
     	}
     }
     
