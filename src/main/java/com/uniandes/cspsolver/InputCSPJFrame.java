@@ -44,7 +44,7 @@ public class InputCSPJFrame extends javax.swing.JFrame {
     	setResizable(false);
     	initComponents();
     	solver= new MainCSPSolver();
-    	initCSP01();
+    	initCSP04();
     	updateCluesList();
     }
     
